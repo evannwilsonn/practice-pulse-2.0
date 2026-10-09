@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Pulse 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f4f5f7;--surface:#ffffff;--surface-2:#f8f9fb;--line:#e3e5ea;--line-2:#d3d6dd;
+  --text:#14161c;--text-2:#4a4f5c;--text-3:#767b88;
+  --s1:#2a6fdb;--s2:#a8630f;--s3:#16865a;--up:#16865a;--down:#c2412d;--focus:#2a6fdb;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#0c0c12;--surface:#13131b;--surface-2:#191922;--line:#25252f;--line-2:#33333f;
+  --text:#f2f3f6;--text-2:#b4b7c2;--text-3:#878a96;--s1:#3d7eff;--s2:#c27a1a;--s3:#1fa36b;--up:#4cc38a;--down:#ff7a6b;--focus:#7ea8ff}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0c0c12;--surface:#13131b;--surface-2:#191922;--line:#25252f;--line-2:#33333f;
+  --text:#f2f3f6;--text-2:#b4b7c2;--text-3:#878a96;--s1:#3d7eff;--s2:#c27a1a;--s3:#1fa36b;--up:#4cc38a;--down:#ff7a6b;--focus:#7ea8ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1320px;margin:0 auto;padding:24px 20px 48px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.brand h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.brand p{margin:4px 0 0;color:var(--text-2);font-size:14px}
+.badge{display:inline-block;margin-left:8px;font:500 11px var(--mono);color:var(--text-3);border:1px solid var(--line-2);border-radius:999px;padding:2px 8px;vertical-align:3px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{font:500 13px var(--font);color:var(--text-2);background:none;border:0;border-radius:7px;padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+select{font:500 13px var(--font);color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.kpi .lbl{margin:0;font-size:13px;font-weight:500;color:var(--text-2)}
+.kpi .v{font-size:28px;font-weight:600;letter-spacing:-.02em;margin:6px 0 4px;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:12.5px;color:var(--text-3)}
+.kpi .d b{font-weight:600}.kpi .d .up{color:var(--up)}.kpi .d .down{color:var(--down)}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.card header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.card h2{margin:0;font-size:15px;font-weight:600}
+.card .sub{font-size:12.5px;color:var(--text-3)}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--text-2)}
+.legend i{display:inline-block;width:14px;height:2px;border-radius:2px;margin-right:6px;vertical-align:3px}
+.plot{position:relative}
+.plot svg{display:block;width:100%;height:auto;overflow:visible}
+.ax{font:11px var(--font);fill:var(--text-3)}
+.gridl{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;font-size:12.5px;white-space:nowrap;opacity:0;transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s;z-index:3;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.tip.on{opacity:1}.tip b{font-weight:600}.tip span{color:var(--text-2)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-weight:500;color:var(--text-3);text-align:right;padding:8px 6px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--surface-2)}
+tbody tr[aria-selected="true"] td{background:color-mix(in srgb,var(--s1) 10%,transparent)}
+td small{display:block;color:var(--text-3);font-size:11.5px}
+.flag{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.mix-row{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;align-items:center;gap:10px;padding:5px 0;font-size:13px}
+.mix-row .bar{height:10px;border-radius:4px;background:var(--s1)}
+.mix-row .pct{text-align:right;color:var(--text-2);font-variant-numeric:tabular-nums}
+.full{grid-column:1/-1}
+details{margin-top:10px;font-size:13px;color:var(--text-2)}
+details summary{cursor:pointer}
+details table{margin-top:8px}
+footer.lin{margin-top:18px;color:var(--text-3);font-size:12.5px;line-height:1.6}
+footer.lin code{font-family:var(--mono);font-size:12px;color:var(--text-2)}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
+@media (max-width:560px){.kpis{grid-template-columns:1fr}.mix-row{grid-template-columns:110px minmax(0,1fr) 52px}.hide-sm{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Practice Pulse 2.0 <span class="badge">Sample data</span></h1>
+      <p id="subtitle">Five-location dental group · loading…</p>
+    </div>
+    <div class="filters">
+      <label><span class="sr" hidden>Location</span><select id="loc" aria-label="Location"></select></label>
+      <div class="seg" role="group" aria-label="Date range">
+        <button type="button" data-r="12" aria-pressed="true">Last 12 months</button>
+        <button type="button" data-r="ytd" aria-pressed="false">Year to date</button>
+        <button type="button" data-r="all" aria-pressed="false">All time</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="Key metrics"></section>
+
+  <section class="grid">
+    <article class="card">
+      <header><h2>Production and collections by month</h2>
+        <div class="legend"><span><i style="background:var(--s1)"></i>Production</span><span><i style="background:var(--s2)"></i>Collections</span></div></header>
+      <div class="plot" id="trend"></div>
+      <details><summary>View as table</summary><div id="trendTable"></div></details>
+    </article>
+    <article class="card">
+      <header><h2>Production by service type</h2><span class="sub" id="mixSub"></span></header>
+      <div id="mix"></div>
+    </article>
+    <article class="card full">
+      <header><h2>Location scorecard</h2><span class="sub">Ratios use totals for the selected range. Click a row to focus on that location.</span></header>
+      <div style="overflow-x:auto"><table id="score"></table></div>
+    </article>
+    <article class="card">
+      <header><h2>New patients by month</h2><span class="sub">Hover for ad cost per new patient</span></header>
+      <div class="plot" id="np"></div>
+    </article>
+    <article class="card">
+      <header><h2>Where the money goes</h2><span class="sub" id="costSub"></span></header>
+      <div id="costs"></div>
+    </article>
+  </section>
+
+  <footer class="lin" id="lineage"></footer>
+</div>
+
+<script>
+(async function(){
+const D = window.PP_DATA || await fetch('data.json').then(r=>r.json());
+const $ = id => document.getElementById(id);
+const K = D.kpi_columns, ix = Object.fromEntries(K.map((c,i)=>[c,i]));
+const rows = D.kpis.map(r=>Object.fromEntries(K.map((c,i)=>[c,r[i]])));
+const mixRows = D.mix.map(r=>({loc:r[0],month:r[1],cat:r[2],n:r[3],prod:r[4]}));
+const months = [...new Set(rows.map(r=>r.month_start))].sort();
+const LOC = Object.fromEntries(D.locations.map(l=>[l.id,l]));
+const lastMonth = months[months.length-1];
+let state = {loc:'all', range:'12'};
+
+const fmt$ = v => Math.abs(v)>=1e6 ? '$'+(v/1e6).toFixed(2)+'M' : Math.abs(v)>=1e4 ? '$'+Math.round(v/1e3)+'K' : '$'+Math.round(v).toLocaleString();
+const fmtN = v => Math.round(v).toLocaleString();
+const pct = v => (v*100).toFixed(1)+'%';
+const mLabel = m => new Date(m+'-15').toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+const sum = (a,k) => a.reduce((s,r)=>s+(r[k]||0),0);
+
+function rangeMonths(r){
+  const end = months.length;
+  if(r==='all') return months.slice();
+  if(r==='ytd') return months.filter(m=>m.startsWith(lastMonth.slice(0,4)));
+  return months.slice(Math.max(0,end-12));
+}
+function priorMonths(sel){
+  const i0 = months.indexOf(sel[0]), n = sel.length;
+  return i0-n>=0 ? months.slice(i0-n,i0) : null;
+}
+function agg(loc, ms){
+  const set = new Set(ms);
+  const rs = rows.filter(r=>set.has(r.month_start) && (loc==='all'||r.location_id===loc));
+  const a = {}; for(const c of K.slice(2)) a[c]=sum(rs,c);
+  a.collection_ratio = a.collections/a.gross_production;
+  a.margin = a.operating_profit/a.collections;
+  a.pph = a.gross_production/a.provider_hours;
+  a.payroll_pct = a.payroll_cost/a.gross_production;
+  a.supply_pct = a.supply_cost/a.gross_production;
+  a.cpnp = a.ad_spend/a.new_patients;
+  return a;
+}
+function series(loc, ms){
+  return ms.map(m=>{const rs=rows.filter(r=>r.month_start===m&&(loc==='all'||r.location_id===loc));
+    return {m, prod:sum(rs,'gross_production'), coll:sum(rs,'collections'), np:sum(rs,'new_patients'), ad:sum(rs,'ad_spend')}});
+}
+function delta(cur, prev, kind){
+  if(prev==null||!isFinite(prev)||prev===0) return '<span>No prior period to compare</span>';
+  if(kind==='pts'){const d=(cur-prev)*100;const up=d>=0;return `<b class="${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(d).toFixed(1)} pts</b> vs prior period`}
+  const d=(cur-prev)/prev*100, up=d>=0;
+  return `<b class="${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(d).toFixed(1)}%</b> vs prior period`;
+}
+
+function renderKpis(){
+  const ms=rangeMonths(state.range), pm=priorMonths(ms);
+  const a=agg(state.loc,ms), p=pm?agg(state.loc,pm):null;
+  const tiles=[
+    ['Gross production', fmt$(a.gross_production), delta(a.gross_production,p&&p.gross_production)],
+    ['Collections', fmt$(a.collections), `${pct(a.collection_ratio)} of production · ${delta(a.collection_ratio,p&&p.collection_ratio,'pts')}`],
+    ['New patients', fmtN(a.new_patients), delta(a.new_patients,p&&p.new_patients)],
+    ['Operating margin', pct(a.margin), delta(a.margin,p&&p.margin,'pts')],
+    ['Production per provider hour', fmt$(a.pph), delta(a.pph,p&&p.pph)],
+  ];
+  $('kpis').innerHTML=tiles.map(([h,v,d])=>`<div class="kpi"><div class="lbl">${h}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join('');
+  const where = state.loc==='all'?'All five locations':LOC[state.loc].name+' · '+LOC[state.loc].pms.replace('_',' ');
+  $('subtitle').textContent = `${where} · ${mLabel(ms[0])} to ${mLabel(ms[ms.length-1])}`;
+}
+
+function tipEl(host){let t=host.querySelector('.tip');if(!t){t=document.createElement('div');t.className='tip';host.appendChild(t)}return t}
+function niceMax(v){const raw=v/4,mg=Math.pow(10,Math.floor(Math.log10(raw))),st=[1,2,2.5,5,10].map(k=>k*mg).find(k=>k>=raw);return st*4}
+
+function renderTrend(){
+  const ms=rangeMonths(state.range), s=series(state.loc,ms), host=$('trend');
+  const W=Math.max(300,host.clientWidth||720),H=W<500?220:270,L=56,R=12,T=12,B=28,n=s.length;
+  const mx=niceMax(Math.max(...s.map(d=>Math.max(d.prod,d.coll))));
+  const x=i=>n===1?L+(W-L-R)/2:L+(W-L-R)*i/(n-1), y=v=>T+(H-T-B)*(1-v/mx);
+  const path=k=>s.map((d,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(d[k]).toFixed(1)).join('');
+  let g='';for(let k=0;k<=4;k++){const v=mx*k/4;g+=`<line class="gridl" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L-8}" y="${y(v)+4}" text-anchor="end">${fmt$(v)}</text>`}
+  const step=Math.max(1,Math.ceil(n/8));
+  const showL=i=>i===n-1||(i%step===0&&n-1-i>=step*.6);const labs=s.map((d,i)=>showL(i)?`<text class="ax" x="${x(i)}" y="${H-8}" text-anchor="middle">${mLabel(d.m)}</text>`:'').join('');
+  const last=n-1;
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly production and collections, ${mLabel(ms[0])} to ${mLabel(ms[last])}">${g}${labs}
+    <path d="${path('prod')}" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="${path('coll')}" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round"/>
+    <line id="xh" y1="${T}" y2="${H-B}" stroke="var(--line-2)" opacity="0"/>
+    <circle id="p1" r="4.5" fill="var(--s1)" stroke="var(--surface)" stroke-width="2" opacity="0"/>
+    <circle id="p2" r="4.5" fill="var(--s2)" stroke="var(--surface)" stroke-width="2" opacity="0"/>
+    <rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" id="hit"/></svg>`;
+  const sv=host.querySelector('svg'),tp=tipEl(host);
+  $('hit').addEventListener('pointermove',e=>{const r=sv.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W;const i=Math.max(0,Math.min(n-1,Math.round((px-L)/(W-L-R)*(n-1))));
+    const d=s[i];$('xh').setAttribute('x1',x(i));$('xh').setAttribute('x2',x(i));$('xh').setAttribute('opacity',1);
+    for(const [id,k] of [['p1','prod'],['p2','coll']]){$(id).setAttribute('cx',x(i));$(id).setAttribute('cy',y(d[k]));$(id).setAttribute('opacity',1)}
+    tp.innerHTML=`<b>${mLabel(d.m)}</b><br><span>Production</span> ${fmt$(d.prod)}<br><span>Collections</span> ${fmt$(d.coll)} (${pct(d.coll/d.prod)})`;
+    tp.style.left=(x(i)/W*r.width)+'px';tp.style.top=(y(Math.max(d.prod,d.coll))/H*r.height)+'px';tp.classList.add('on')});
+  $('hit').addEventListener('pointerleave',()=>{tp.classList.remove('on');['xh','p1','p2'].forEach(id=>$(id).setAttribute('opacity',0))});
+  $('trendTable').innerHTML=`<table><thead><tr><th>Month</th><th>Production</th><th>Collections</th><th>Ratio</th></tr></thead><tbody>${s.map(d=>`<tr><td>${mLabel(d.m)}</td><td>${fmt$(d.prod)}</td><td>${fmt$(d.coll)}</td><td>${pct(d.coll/d.prod)}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function renderMix(){
+  const ms=new Set(rangeMonths(state.range));
+  const by={};mixRows.filter(r=>ms.has(r.month)&&(state.loc==='all'||r.loc===state.loc)).forEach(r=>{by[r.cat]=(by[r.cat]||0)+r.prod});
+  const tot=Object.values(by).reduce((a,b)=>a+b,0);const list=Object.entries(by).sort((a,b)=>b[1]-a[1]);const mx=list[0][1];
+  $('mixSub').textContent=fmt$(tot)+' total';
+  $('mix').innerHTML=list.map(([c,v])=>`<div class="mix-row" title="${c}: ${fmt$(v)}"><span>${c}</span><div class="bar" style="width:${Math.max(2,v/mx*100)}%"></div><span class="pct">${pct(v/tot)}</span></div>`).join('');
+}
+
+function renderScore(){
+  const ms=rangeMonths(state.range);
+  const list=D.locations.map(l=>({l,a:agg(l.id,ms)}));
+  const all=agg('all',ms);
+  const best=(k,dir)=>dir>0?Math.max(...list.map(o=>o.a[k])):Math.min(...list.map(o=>o.a[k]));
+  const mark=(o,k,dir)=>o.a[k]===best(k,dir)?'<span class="flag" style="background:var(--up)" title="Best in group"></span>':'';
+  $('score').innerHTML=`<thead><tr><th>Location</th><th>Production</th><th>Collected</th><th>Payroll % prod.</th><th class="hide-sm">Supplies % prod.</th><th>Margin</th><th>New patients</th><th class="hide-sm">Ad cost / new patient</th><th class="hide-sm">Prod. / provider hr</th></tr></thead><tbody>`+
+    list.map(o=>`<tr data-loc="${o.l.id}" tabindex="0" aria-selected="${state.loc===o.l.id}"><td>${o.l.name}<small>${o.l.specialty==='orthodontics'?'Orthodontics':'General'} · ${o.l.pms.replace('_',' ')}</small></td>
+      <td>${mark(o,'gross_production',1)}${fmt$(o.a.gross_production)}</td><td>${pct(o.a.collection_ratio)}</td><td>${mark(o,'payroll_pct',-1)}${pct(o.a.payroll_pct)}</td>
+      <td class="hide-sm">${pct(o.a.supply_pct)}</td><td>${mark(o,'margin',1)}${pct(o.a.margin)}</td><td>${fmtN(o.a.new_patients)}</td><td class="hide-sm">${fmt$(o.a.cpnp)}</td><td class="hide-sm">${fmt$(o.a.pph)}</td></tr>`).join('')+
+    `<tr data-loc="all" tabindex="0" aria-selected="${state.loc==='all'}"><td><b>All locations</b></td><td><b>${fmt$(all.gross_production)}</b></td><td>${pct(all.collection_ratio)}</td><td>${pct(all.payroll_pct)}</td><td class="hide-sm">${pct(all.supply_pct)}</td><td>${pct(all.margin)}</td><td>${fmtN(all.new_patients)}</td><td class="hide-sm">${fmt$(all.cpnp)}</td><td class="hide-sm">${fmt$(all.pph)}</td></tr></tbody>`;
+  $('score').querySelectorAll('tbody tr').forEach(tr=>{const go=()=>{state.loc=tr.dataset.loc;$('loc').value=state.loc;render()};tr.onclick=go;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}});
+}
+
+function renderNp(){
+  const ms=rangeMonths(state.range), s=series(state.loc,ms), host=$('np');
+  const W=Math.max(300,host.clientWidth||520),H=220,L=40,R=8,T=10,B=26,n=s.length,mx=niceMax(Math.max(...s.map(d=>d.np)));
+  const bw=(W-L-R)/n, y=v=>T+(H-T-B)*(1-v/mx);
+  let g='';for(let k=0;k<=4;k++){const v=mx*k/4;g+=`<line class="gridl" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L-6}" y="${y(v)+4}" text-anchor="end">${fmtN(v)}</text>`}
+  const step=Math.max(1,Math.ceil(n/6));
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="New patients per month">${g}`+
+    s.map((d,i)=>{const x0=L+i*bw+Math.min(2,bw*.15),w=Math.max(2,bw-Math.min(4,bw*.3)),h=Math.max(0,y(0)-y(d.np));
+      return `<g data-i="${i}"><path d="M${x0} ${y(0)} V${y(d.np)+Math.min(4,h)} q0 -4 4 -4 H${x0+w-4} q4 0 4 4 V${y(0)} Z" fill="var(--s3)"/><rect x="${L+i*bw}" y="${T}" width="${bw}" height="${H-T-B}" fill="transparent"/>${(i===n-1||(i%step===0&&n-1-i>=step*.6))?`<text class="ax" x="${x0+w/2}" y="${H-8}" text-anchor="middle">${mLabel(d.m)}</text>`:''}</g>`}).join('')+'</svg>';
+  const sv=host.querySelector('svg'),tp=tipEl(host);
+  sv.querySelectorAll('g[data-i]').forEach(g=>{g.addEventListener('pointerenter',()=>{const d=s[+g.dataset.i],r=sv.getBoundingClientRect();
+    tp.innerHTML=`<b>${mLabel(d.m)}</b><br>${fmtN(d.np)} new patients<br><span>Ad cost per new patient</span> ${fmt$(d.ad/d.np)}`;
+    tp.style.left=((L+(+g.dataset.i+.5)*bw)/W*r.width)+'px';tp.style.top=(y(d.np)/H*r.height)+'px';tp.classList.add('on')});
+    g.addEventListener('pointerleave',()=>tp.classList.remove('on'))});
+}
+
+function renderCosts(){
+  const a=agg(state.loc,rangeMonths(state.range));
+  const items=[['Payroll',a.payroll_cost],['Facilities & overhead',a.overhead_cost],['Supplies',a.supply_cost],['Lab fees',a.lab_fees],['Paid search',a.ad_spend],['Operating profit',a.operating_profit]];
+  const tot=a.collections;$('costSub').textContent='Share of '+fmt$(tot)+' collected';
+  const mx=Math.max(...items.map(i=>i[1]));
+  $('costs').innerHTML=items.map(([k,v])=>`<div class="mix-row"><span>${k}</span><div class="bar" style="width:${Math.max(2,v/mx*100)}%;background:${k==='Operating profit'?'var(--s3)':'var(--s1)'}"></div><span class="pct">${pct(v/tot)}</span></div>`).join('');
+}
+
+function render(){renderKpis();renderTrend();renderMix();renderScore();renderNp();renderCosts()}
+
+$('loc').innerHTML='<option value="all">All locations</option>'+D.locations.map(l=>`<option value="${l.id}">${l.name}</option>`).join('');
+$('loc').onchange=e=>{state.loc=e.target.value;render()};
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{state.range=b.dataset.r;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+const src=D.procedure_rows_by_source;
+$('lineage').innerHTML=`Pipeline: three practice management systems (<code>open_dental</code> ${fmtN(src.open_dental)}, <code>dentrix_ascend</code> ${fmtN(src.dentrix_ascend)}, <code>dolphin</code> ${fmtN(src.dolphin)} completed procedures) plus Sage Intacct, UKG, Henry Schein and Google Ads → raw landing zone → dbt staging, intermediate and core models → <code>rpt_location_monthly_kpis</code>. Ratios are recomputed from summed totals for the selected range, never averaged. All data is synthetic. Built ${D.generated}.`;
+render();
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{renderTrend();renderNp()},150)});
+})();
+</script>
+</body>
+</html>

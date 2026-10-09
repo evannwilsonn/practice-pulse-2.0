@@ -1,0 +1,23 @@
+cdt_code,description,category
+D0120,Periodic oral evaluation,Diagnostic
+D0150,Comprehensive oral evaluation,Diagnostic
+D0274,"Bitewings, four films",Diagnostic
+D0330,Panoramic radiograph,Diagnostic
+D1110,Adult prophylaxis,Preventive
+D1120,Child prophylaxis,Preventive
+D1206,Fluoride varnish,Preventive
+D2391,"Resin composite, one surface",Restorative
+D2392,"Resin composite, two surfaces",Restorative
+D2740,Porcelain crown,Restorative
+D3330,"Root canal, molar",Endodontics
+D4341,"Periodontal scaling, per quadrant",Periodontics
+D4910,Periodontal maintenance,Periodontics
+D6010,Implant body placement,Implants
+D7140,"Extraction, erupted tooth",Oral Surgery
+D9944,Occlusal guard,Adjunctive
+D8090,"Comprehensive orthodontic treatment, adult",Orthodontics
+D8080,"Comprehensive orthodontic treatment, adolescent",Orthodontics
+D8670,Periodic orthodontic visit,Orthodontics
+D8680,Orthodontic retention,Orthodontics
+D0140,Limited oral evaluation,Diagnostic
+D8660,Pre-orthodontic treatment visit,Orthodontics

@@ -1,0 +1,19 @@
+version: 2
+models:
+  - name: int_procedures__unioned
+    description: Completed procedures from Open Dental, Dentrix Ascend and Dolphin in one shape. Deleted and planned work is excluded here.
+    columns:
+      - name: procedure_id
+        tests: [unique, not_null]
+      - name: source_system
+        tests:
+          - accepted_values: {values: [open_dental, dentrix_ascend, dolphin]}
+  - name: int_payments__unioned
+    description: All payments and refunds across the three practice management systems.
+    columns:
+      - name: payment_id
+        tests: [unique, not_null]
+  - name: int_patients__first_visit
+    columns:
+      - name: patient_id
+        tests: [unique, not_null]

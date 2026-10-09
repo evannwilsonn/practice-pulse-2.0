@@ -1,0 +1,35 @@
+name: practice_pulse
+version: "1.0.0"
+config-version: 2
+profile: practice_pulse
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  practice_pulse:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      core:
+        +schema: core
+      reporting:
+        +schema: reporting
+
+seeds:
+  practice_pulse:
+    +schema: reference
+
+vars:
+  # months before this are excluded from KPI rates that need a full collection window
+  collection_window_days: 60

@@ -1,0 +1,6 @@
+location_id,location_name,city,pms_system,specialty,opened_on
+L001,Tampa Downtown,Tampa,open_dental,general,2011-03-01
+L002,Brandon,Brandon,open_dental,general,2015-06-15
+L003,Clearwater,Clearwater,dentrix_ascend,general,2017-01-09
+L004,Sarasota,Sarasota,dentrix_ascend,general,2019-10-01
+L005,Tampa Ortho,Tampa,dolphin,orthodontics,2021-04-12

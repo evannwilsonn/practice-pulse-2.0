@@ -1,0 +1,26 @@
+version: 2
+seeds:
+  - name: locations
+    description: One row per practice location. The master list everything else maps to.
+    config:
+      column_types: {opened_on: date}
+    columns:
+      - name: location_id
+        tests: [unique, not_null]
+  - name: location_aliases
+    description: >
+      Every way a source system spells a location, mapped to its location_id.
+      Values are stored upper-cased and trimmed, matching normalize_text().
+      When a new spelling shows up, the not_null tests on location_id in staging fail
+      and a row gets added here.
+    columns:
+      - name: alias_value
+        tests: [not_null]
+      - name: location_id
+        tests:
+          - relationships: {to: ref('locations'), field: location_id}
+  - name: procedure_codes
+    description: ADA CDT procedure codes used across the group, with the category used for reporting.
+    columns:
+      - name: cdt_code
+        tests: [unique, not_null]

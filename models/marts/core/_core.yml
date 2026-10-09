@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: dim_locations
+    description: Practice locations.
+    columns:
+      - name: location_id
+        tests: [unique, not_null]
+
+  - name: dim_procedure_codes
+    columns:
+      - name: cdt_code
+        tests: [unique, not_null]
+
+  - name: dim_date
+    description: Calendar from 2024 through 2026.
+    columns:
+      - name: date_day
+        tests: [unique, not_null]
+
+  - name: fct_procedures
+    description: Gross production. One row per completed procedure from any practice management system.
+    columns:
+      - name: procedure_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests:
+          - not_null
+          - relationships: {to: ref('dim_locations'), field: location_id}
+      - name: cdt_code
+        tests:
+          - relationships: {to: ref('dim_procedure_codes'), field: cdt_code}
+      - name: production_amount
+        tests: [not_null]
+
+  - name: fct_payments
+    description: Collections. One row per payment or refund.
+    columns:
+      - name: payment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests:
+          - relationships: {to: ref('dim_locations'), field: location_id}
+
+  - name: fct_payroll
+    columns:
+      - name: payroll_line_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests:
+          - relationships: {to: ref('dim_locations'), field: location_id}
+
+  - name: fct_operating_expenses
+    description: Non-payroll costs from the general ledger and supply orders.
+    columns:
+      - name: expense_line_id
+        tests: [unique, not_null]
+      - name: expense_group
+        tests:
+          - accepted_values: {values: ['Lab Fees', 'Facilities & Overhead', 'Supplies']}
+
+  - name: fct_marketing_daily
+    columns:
+      - name: ad_day_id
+        tests: [unique, not_null]

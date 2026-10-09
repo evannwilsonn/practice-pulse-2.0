@@ -1,0 +1,10 @@
+alias_type,alias_value,location_id
+location_name,TAMPA DOWNTOWN,L001
+location_name,BRANDON,L002
+location_name,CLEARWATER,L003
+location_name,SARASOTA,L004
+location_name,TAMPA ORTHO,L005
+open_dental_clinic,1,L001
+open_dental_clinic,2,L002
+location_name,CLEARWATER OFFICE,L003
+location_name,SARASOTA OFFICE,L004

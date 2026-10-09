@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: stg_open_dental__procedures
+    description: Open Dental procedures, typed and mapped to a location. Includes deleted and planned rows; filtering happens downstream.
+    columns:
+      - name: procedure_id
+        tests: [unique, not_null]
+      - name: location_id
+        description: Mapped from ClinicNum through the location_aliases seed.
+        tests: [not_null]
+      - name: service_date
+        tests: [not_null]
+      - name: procedure_status
+        tests:
+          - accepted_values: {values: [completed, planned, deleted, other]}
+
+  - name: stg_open_dental__payments
+    columns:
+      - name: payment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+
+  - name: stg_dentrix_ascend__procedures
+    description: Dentrix Ascend procedures, deduplicated, with currency strings and free-text locations cleaned up.
+    columns:
+      - name: procedure_id
+        tests: [unique, not_null]
+      - name: location_id
+        description: Fails loudly if a new spelling of a location appears in the export.
+        tests: [not_null]
+      - name: fee_amount
+        tests: [not_null]
+      - name: procedure_status
+        tests:
+          - accepted_values: {values: [completed, planned]}
+
+  - name: stg_dentrix_ascend__payments
+    columns:
+      - name: payment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+
+  - name: stg_dolphin__transactions
+    columns:
+      - name: procedure_id
+        tests: [unique, not_null]
+      - name: service_date
+        tests: [not_null]
+
+  - name: stg_dolphin__receipts
+    columns:
+      - name: payment_id
+        tests: [unique, not_null]
+
+  - name: stg_sage_intacct__gl_detail
+    columns:
+      - name: gl_entry_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests:
+          - relationships: {to: ref('locations'), field: location_id}
+
+  - name: stg_ukg__payroll
+    columns:
+      - name: payroll_line_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+
+  - name: stg_henry_schein__supply_orders
+    columns:
+      - name: supply_order_line_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests:
+          - relationships: {to: ref('locations'), field: location_id}
+
+  - name: stg_google_ads__campaign_daily
+    columns:
+      - name: ad_day_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]

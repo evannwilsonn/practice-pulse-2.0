@@ -1,0 +1,60 @@
+version: 2
+
+sources:
+  - name: open_dental
+    description: Open Dental PMS exports (Tampa Downtown, Brandon).
+    schema: raw_open_dental
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 2, period: day}
+      error_after: {count: 4, period: day}
+    tables:
+      - name: procedurelog
+        description: Every procedure entered in Open Dental. ProcStatus 2 = complete, 6 = deleted.
+      - name: payment
+        description: Patient and insurance payments. Negative PayAmt rows are refunds.
+
+  - name: dentrix_ascend
+    description: Dentrix Ascend cloud PMS exports (Clearwater, Sarasota). Dates are MM/DD/YYYY, amounts are currency strings.
+    schema: raw_dentrix_ascend
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 2, period: day}
+    tables:
+      - name: procedures_export
+        description: Completed and planned procedures. Re-exports can duplicate rows.
+      - name: payments_export
+
+  - name: dolphin
+    description: Dolphin ortho management exports (Tampa Ortho). Semicolon-delimited, dates are DD-MM-YYYY.
+    schema: raw_dolphin
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 2, period: day}
+    tables:
+      - name: transactions
+      - name: receipts
+
+  - name: sage_intacct
+    description: General ledger detail from Sage Intacct.
+    schema: raw_sage_intacct
+    tables:
+      - name: gl_detail
+
+  - name: ukg
+    description: Biweekly payroll register from UKG. home_location is free text.
+    schema: raw_ukg
+    tables:
+      - name: payroll_register
+
+  - name: henry_schein
+    description: Supply orders from Henry Schein, shipped to a location_id.
+    schema: raw_henry_schein
+    tables:
+      - name: supply_orders
+
+  - name: google_ads
+    description: Daily campaign stats from the Google Ads API, landed as raw JSON.
+    schema: raw_google_ads
+    tables:
+      - name: campaign_daily

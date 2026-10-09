@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: rpt_location_monthly_kpis
+    description: >
+      One row per location per month with the numbers an owner checks: production,
+      collections, visits, new patients, cost ratios, marketing efficiency and an
+      operating profit estimate. Every metric is defined once, here.
+    tests:
+      - unique_combination:
+          columns: [location_id, month_start]
+    columns:
+      - name: gross_production
+        description: Total fees for completed procedures, before adjustments.
+      - name: collections
+        description: Money actually received in the month, net of refunds.
+      - name: collection_ratio
+        description: Collections divided by production for the month. Payments lag the visit by up to 60 days, so the latest month runs low.
+      - name: collection_ratio_t3m
+        description: >
+          Trailing three-month collections over trailing three-month production. The number to
+          judge collections on, because payment lag and big-ticket cases make single months swing.
+      - name: new_patients
+        description: Patients whose first completed procedure was in this month.
+      - name: production_per_provider_hour
+        description: Production divided by paid hours for dentists, orthodontists and hygienists.
+      - name: operating_profit
+        description: Collections minus payroll, supplies, lab fees, overhead and ad spend. A management estimate, not GAAP.
+
+  - name: rpt_procedure_mix_monthly
+    description: Production by procedure category, for service-mix analysis.
+    tests:
+      - unique_combination:
+          columns: [location_id, month_start, procedure_category]
+
+exposures:
+  - name: practice_pulse_dashboard
+    type: dashboard
+    maturity: medium
+    url: dashboard/index.html
+    description: Executive KPI dashboard for owners and office managers.
+    depends_on:
+      - ref('rpt_location_monthly_kpis')
+      - ref('rpt_procedure_mix_monthly')
+    owner:
+      name: Evan Wilson
