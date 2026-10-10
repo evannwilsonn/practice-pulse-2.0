@@ -1,6 +1,6 @@
 # Practice Pulse 2.0
 
-**An end-to-end analytics pipeline for a multi-location dental group.** Raw exports from three different practice management systems and five back-office tools are loaded into a warehouse, cleaned and modeled with dbt, tested, and served as an executive KPI dashboard.
+**An end-to-end analytics pipeline for a multi-location dental group.** Raw exports from three different practice management systems and four back-office tools are loaded into a warehouse, cleaned and modeled with dbt, tested, and served as an executive KPI dashboard.
 
 ![Practice Pulse 2.0 dashboard](docs/dashboard.png)
 

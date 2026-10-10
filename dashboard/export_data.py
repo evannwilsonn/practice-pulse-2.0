@@ -41,6 +41,31 @@ def main() -> None:
         "select source_system, count(*) from core.fct_procedures group by 1 order by 1"
     ).fetchall()
 
+    one = lambda sql: con.execute(sql).fetchone()[0]
+    cleanup = {
+        "dentrix_duplicates_removed": one("select (select count(*) from raw_dentrix_ascend.procedures_export) - (select count(*) from staging.stg_dentrix_ascend__procedures)"),
+        "open_dental_deleted_excluded": one("select count(*) from staging.stg_open_dental__procedures where procedure_status = 'deleted'"),
+        "dentrix_planned_excluded": one("select count(*) from staging.stg_dentrix_ascend__procedures where procedure_status = 'planned'"),
+        "location_spellings": one("select count(distinct location_name) from raw_dentrix_ascend.procedures_export"),
+        "location_spellings_offices": one("select count(distinct s.location_id) from staging.stg_dentrix_ascend__procedures s"),
+        "refunds": one("select count(*) from core.fct_payments where is_refund"),
+        "refund_amount": float(one("select sum(payment_amount) from core.fct_payments where is_refund")),
+    }
+    # the same check as tests/assert_production_reconciles_to_sources.sql, exported so the page can show it
+    reconciliation = [
+        {"source": s, "source_total": float(st), "mart_total": float(mt)}
+        for s, st, mt in con.execute("""
+            with src as (
+                select 'open_dental' as s, sum(fee_amount) as t from staging.stg_open_dental__procedures where procedure_status = 'completed'
+                union all select 'dentrix_ascend', sum(fee_amount) from staging.stg_dentrix_ascend__procedures where procedure_status = 'completed'
+                union all select 'dolphin', sum(fee_amount) from staging.stg_dolphin__transactions
+            ), mart as (
+                select l.pms_system as s, sum(k.gross_production) as t
+                from reporting.rpt_location_monthly_kpis k join core.dim_locations l using (location_id) group by 1
+            )
+            select src.s, round(src.t, 2), round(mart.t, 2) from src left join mart using (s) order by 1""").fetchall()
+    ]
+
     def clean(v):
         if isinstance(v, date):
             return v.isoformat()[:7]
@@ -56,6 +81,8 @@ def main() -> None:
         "mix_columns": ["location_id", "month", "category", "procedures", "production"],
         "mix": [[clean(v) for v in r] for r in mix],
         "procedure_rows_by_source": {s: n for s, n in sources},
+        "cleanup": cleanup,
+        "reconciliation": reconciliation,
     }
     OUT.write_text(json.dumps(payload, separators=(",", ":")))
     print(f"Wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size / 1024:.0f} KB, {len(kpis)} KPI rows, {len(mix)} mix rows)")
