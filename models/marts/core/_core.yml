@@ -2,10 +2,14 @@ version: 2
 
 models:
   - name: dim_locations
-    description: Practice locations.
+    description: Practice locations, with the region each one reports into.
     columns:
       - name: location_id
         tests: [unique, not_null]
+      - name: region
+        tests:
+          - not_null
+          - accepted_values: {values: ['Tampa Bay', 'Gulf Coast', 'Central Florida']}
 
   - name: dim_procedure_codes
     columns:
@@ -37,6 +41,15 @@ models:
     description: Collections. One row per payment or refund.
     columns:
       - name: payment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests:
+          - relationships: {to: ref('dim_locations'), field: location_id}
+
+  - name: fct_adjustments
+    description: Write-offs and courtesy discounts. Gross production plus these (negative) amounts is net production.
+    columns:
+      - name: adjustment_id
         tests: [unique, not_null]
       - name: location_id
         tests:

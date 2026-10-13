@@ -16,7 +16,7 @@ DB = ROOT / "warehouse" / "practice_pulse.duckdb"
 OUT = ROOT / "dashboard" / "data.json"
 
 KPI_COLS = [
-    "location_id", "month_start", "gross_production", "collections", "patient_visits",
+    "location_id", "month_start", "gross_production", "write_offs", "net_production", "collections", "patient_visits",
     "new_patients", "provider_hours", "payroll_cost", "supply_cost", "lab_fees",
     "overhead_cost", "ad_spend", "operating_profit",
 ]
@@ -25,9 +25,9 @@ KPI_COLS = [
 def main() -> None:
     con = duckdb.connect(str(DB), read_only=True)
     locations = [
-        dict(zip(["id", "name", "city", "pms", "specialty"], r))
+        dict(zip(["id", "name", "region", "metro", "pms", "specialty"], r))
         for r in con.execute(
-            "select location_id, location_name, city, pms_system, specialty from core.dim_locations order by 1"
+            "select location_id, location_name, region, metro, pms_system, specialty from core.dim_locations order by 1"
         ).fetchall()
     ]
     kpis = con.execute(
@@ -49,9 +49,26 @@ def main() -> None:
         "location_spellings": one("select count(distinct location_name) from raw_dentrix_ascend.procedures_export"),
         "location_spellings_offices": one("select count(distinct s.location_id) from staging.stg_dentrix_ascend__procedures s"),
         "refunds": one("select count(*) from core.fct_payments where is_refund"),
+        "adjustment_rows": one("select count(*) from core.fct_adjustments"),
+        "dentrix_accounting_negatives": one("select count(*) from raw_dentrix_ascend.adjustments_export where trim(amount) like '(%)'"),
+        "dolphin_sign_flips": one("select count(*) from raw_dolphin.adjustments"),
+        "dolphin_office_codes": one("select count(distinct Office) from raw_dolphin.transactions"),
         "refund_amount": float(one("select sum(payment_amount) from core.fct_payments where is_refund")),
     }
     # the same check as tests/assert_production_reconciles_to_sources.sql, exported so the page can show it
+    write_off_recon = [
+        {"source": s, "source_total": float(st), "mart_total": float(mt)}
+        for s, st, mt in con.execute("""
+            with src as (
+                select 'open_dental' as s, sum(adjustment_amount) as t from staging.stg_open_dental__adjustments
+                union all select 'dentrix_ascend', sum(adjustment_amount) from staging.stg_dentrix_ascend__adjustments
+                union all select 'dolphin', sum(adjustment_amount) from staging.stg_dolphin__adjustments
+            ), mart as (
+                select l.pms_system as s, -sum(k.write_offs) as t
+                from reporting.rpt_location_monthly_kpis k join core.dim_locations l using (location_id) group by 1
+            )
+            select src.s, round(-src.t, 2), round(-mart.t, 2) from src left join mart using (s) order by 1""").fetchall()
+    ]
     reconciliation = [
         {"source": s, "source_total": float(st), "mart_total": float(mt)}
         for s, st, mt in con.execute("""
@@ -83,6 +100,7 @@ def main() -> None:
         "procedure_rows_by_source": {s: n for s, n in sources},
         "cleanup": cleanup,
         "reconciliation": reconciliation,
+        "write_off_reconciliation": write_off_recon,
     }
     OUT.write_text(json.dumps(payload, separators=(",", ":")))
     print(f"Wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size / 1024:.0f} KB, {len(kpis)} KPI rows, {len(mix)} mix rows)")

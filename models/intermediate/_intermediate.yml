@@ -13,6 +13,11 @@ models:
     columns:
       - name: payment_id
         tests: [unique, not_null]
+  - name: int_adjustments__unioned
+    description: Write-offs and discounts across the three practice management systems, negative amounts.
+    columns:
+      - name: adjustment_id
+        tests: [unique, not_null]
   - name: int_patients__first_visit
     columns:
       - name: patient_id

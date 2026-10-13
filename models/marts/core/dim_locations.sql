@@ -1,7 +1,8 @@
 select
     location_id,
     location_name,
-    city,
+    region,
+    metro,
     pms_system,
     specialty,
     opened_on

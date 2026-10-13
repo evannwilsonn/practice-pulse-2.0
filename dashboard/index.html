@@ -6,45 +6,55 @@
 <title>Practice Pulse 2.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Karla:wght@400;500;600;700&family=Overpass+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Karla:wght@400;500;600;700&family=Overpass+Mono:wght@400;500;600&family=Nanum+Pen+Script&display=swap">
 <style>
 :root{
   color-scheme:light;
   --page:#e9efdf;--sheet:#f3f6ec;--rule:#cbd9bd;--rule-2:#9bb88f;--green:#2c5a37;--green-2:#46704f;--wash:rgba(44,90,55,.08);
-  --ink:#1b1f1a;--ink-2:#434b41;--ink-3:#5d685a;--red:#b4231b;--red-wash:rgba(180,35,27,.08);--focus:#2c5a37;
+  --ink:#1b1f1a;--ink-2:#434b41;--ink-3:#5d685a;--red:#b4231b;--focus:#2c5a37;
   --slab:"Zilla Slab",Georgia,serif;--font:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"Overpass Mono",ui-monospace,Menlo,monospace;
+  --pen:"Nanum Pen Script","Segoe Print","Bradley Hand",cursive;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   color-scheme:dark;--page:#101612;--sheet:#151d18;--rule:#253229;--rule-2:#3d5545;--green:#8fc79a;--green-2:#79b085;--wash:rgba(143,199,154,.08);
-  --ink:#e5ede0;--ink-2:#bac6b6;--ink-3:#8f9d8b;--red:#ff7a6e;--red-wash:rgba(255,122,110,.10);--focus:#8fc79a}}
+  --ink:#e5ede0;--ink-2:#bac6b6;--ink-3:#8f9d8b;--red:#ff7a6e;--focus:#8fc79a}}
 :root[data-theme="dark"]{
   color-scheme:dark;--page:#101612;--sheet:#151d18;--rule:#253229;--rule-2:#3d5545;--green:#8fc79a;--green-2:#79b085;--wash:rgba(143,199,154,.08);
-  --ink:#e5ede0;--ink-2:#bac6b6;--ink-3:#8f9d8b;--red:#ff7a6e;--red-wash:rgba(255,122,110,.10);--focus:#8fc79a}
+  --ink:#e5ede0;--ink-2:#bac6b6;--ink-3:#8f9d8b;--red:#ff7a6e;--focus:#8fc79a}
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);font:16px/1.55 var(--font);-webkit-font-smoothing:antialiased}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 a{color:inherit;text-decoration-color:var(--rule-2);text-underline-offset:3px}
+button{font:inherit;color:inherit}
 code{font:500 13px var(--mono)}
 .wrap{max-width:1240px;margin:0 auto;padding:28px 24px 56px}
-.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .neg{color:var(--red)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ledger head */
-.head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 28px;align-items:end;padding-bottom:14px;border-bottom:3px double var(--green)}
+.head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 28px;align-items:end}
 .head h1{margin:0;font:700 clamp(34px,5vw,54px)/1 var(--slab);color:var(--green);letter-spacing:-.01em}
 .head .sub{margin:8px 0 0;color:var(--ink-2);font-size:15px}
 .head .sub b{font-weight:600;color:var(--ink)}
 .tag{display:inline-block;font:600 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--green);border:1.5px solid var(--green);padding:2px 7px;margin-left:6px;vertical-align:4px}
 .ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
 .ctl label{display:flex;flex-direction:column;gap:4px;font:600 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
-select{font:600 15px var(--font);color:var(--ink);background:var(--sheet);border:1.5px solid var(--green);padding:8px 30px 8px 10px;min-height:42px;appearance:none;cursor:pointer;
+select{font:600 15px var(--font);color:var(--ink);background:var(--sheet);border:1.5px solid var(--green);padding:8px 30px 8px 10px;min-height:42px;appearance:none;cursor:pointer;max-width:100%;
   background-image:linear-gradient(45deg,transparent 50%,var(--green) 50%),linear-gradient(135deg,var(--green) 50%,transparent 50%);background-position:calc(100% - 15px) 18px,calc(100% - 10px) 18px;background-size:5px 5px;background-repeat:no-repeat}
+
+/* running line under the head */
+.pulse{margin:16px 0 0;padding:6px 0 8px;border-top:3px double var(--green);border-bottom:1px solid var(--rule-2)}
+.pulse svg{display:block;width:100%;height:58px;overflow:visible}
+.pulse .cap{display:flex;justify-content:space-between;gap:12px;font:500 11.5px var(--mono);color:var(--ink-3)}
+.pulse .cap span:nth-child(2){text-align:center}
 
 /* memorandum */
 .memo{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:22px 0;border-bottom:1px solid var(--rule-2)}
 .memo .k{font:700 15px var(--slab);color:var(--green);padding-top:3px}
-.memo p{margin:0;font:500 clamp(18px,1.9vw,22px)/1.45 var(--font);max-width:58ch}
+.memo p{margin:0;font:500 clamp(18px,1.9vw,22px)/1.45 var(--font);max-width:62ch}
 .memo p b{font-weight:700}
+.fn{font:400 22px/0 var(--pen);color:var(--red);vertical-align:super;margin-left:2px;white-space:nowrap}
+.memo .fn{font-size:26px}
 
 /* sections */
 .sec{margin-top:34px}
@@ -52,38 +62,91 @@ select{font:600 15px var(--font);color:var(--ink);background:var(--sheet);border
 .sec-h h2{margin:0;font:700 25px/1.15 var(--slab);color:var(--green)}
 .sec-h p{margin:0;color:var(--ink-2);font-size:14.5px;max-width:64ch}
 
+/* index tabs: dividers cut into the top edge of the sheet */
+.tabs{display:flex;gap:4px;align-items:flex-end;padding-left:10px;overflow-x:auto;scrollbar-width:none;margin-bottom:-1.5px;position:relative;z-index:2}
+.tabs button{border:1.5px solid var(--green);border-bottom:0;background:var(--page);padding:7px 22px 6px;font:700 14px var(--slab);color:var(--green);cursor:pointer;white-space:nowrap;
+  clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 100%,0 100%);min-height:36px}
+.tabs button small{font:500 11px var(--mono);color:var(--ink-3);margin-left:6px}
+.tabs button[aria-selected="true"]{background:var(--sheet);padding-bottom:8px}
+.tabs button[aria-selected="true"] small{color:var(--green)}
+.tabs button:focus-visible{outline-offset:-8px}
+.tabs button:not([aria-selected="true"]){background:color-mix(in srgb,var(--green) 7%,var(--page))}
+.tabs button:not([aria-selected="true"]):hover{background:color-mix(in srgb,var(--green) 13%,var(--page))}
+.tabs button[aria-selected="true"]:hover{background:var(--sheet)}
+
 /* the ledger sheet */
-.sheet{background:var(--sheet);border:1.5px solid var(--green);overflow-x:auto}
+.sheet{background:var(--sheet);border:1.5px solid var(--green);overflow-x:auto;position:relative}
 table{width:100%;border-collapse:collapse}
-.led{font-size:15px;min-width:820px}
-.led th,.led td{padding:8px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule)}
+.led{font-size:15px;min-width:760px}
+.led th,.led td{padding:8px 14px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule)}
 .led td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14.5px}
+.led tbody th{font-weight:400}
 .led th:first-child,.led td:first-child{text-align:left;font-family:var(--font);font-size:15px;position:sticky;left:0;background:var(--sheet);z-index:1;border-right:1px solid var(--rule-2)}
-.led thead th{vertical-align:bottom;color:var(--green);font:700 15px/1.2 var(--slab);border-bottom:2px solid var(--green);padding-top:12px;cursor:pointer}
-.led thead th[data-loc]:hover{background:var(--wash)}
-.led thead th:first-child{cursor:default}
+.led thead th{vertical-align:bottom;color:var(--green);font:700 15px/1.2 var(--slab);border-bottom:2px solid var(--green);padding-top:12px}
 .led thead th small{display:block;font:500 11.5px var(--mono);color:var(--ink-3);margin-top:3px}
-.led td+td,.led th+th{border-left:1px solid var(--rule)}
+.led td,.led thead th+th{border-left:1px solid var(--rule)}
 .led .grp{border-left:2px solid var(--rule-2)!important}
 .led col.on{background:var(--wash)}
-.led tr.cat td{font:700 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green);padding-top:16px;border-bottom:1px solid var(--rule-2);background:transparent}
-.led tr.cat td:first-child{background:var(--sheet)}
-.led tr.sub td{color:var(--ink-2)}
-.led tr.sub td:first-child{padding-left:26px}
-.led tr.foot td{font-weight:600;border-bottom:3px double var(--ink)}
-.led tr.foot td:first-child{font-weight:700}
-.led .hn{font:500 12px var(--mono);color:var(--ink-3)}
+.led tr.cat td{font:700 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green);padding-top:16px;border-bottom:1px solid var(--rule-2)}
+.led tr.sub td,.led tr.sub th{color:var(--ink-2)}
+.led tr.sub th{padding-left:26px}
+.led tr.st td,.led tr.st th{border-top:1px solid var(--ink-2)}
+.led tr.foot td,.led tr.foot th{font-weight:600;border-bottom:3px double var(--ink)}
+.led tr.foot th{font-weight:700}
+.led .hn{font:500 12px var(--mono);color:var(--ink-3);white-space:normal;display:block;max-width:22ch}
 .led td .chg{display:block;font-size:12px;color:var(--ink-3);font-weight:400}
+.led td .fn{margin-left:4px}
 .note{margin:10px 0 0;color:var(--ink-2);font-size:14px;max-width:84ch}
 
-/* journal chart */
+/* red pencil: circled figures */
+.circ{position:relative;display:inline-block;padding:0 3px}
+.circ::before{content:"";position:absolute;inset:-4px -8px -2px;border:1.6px solid var(--red);border-radius:var(--b,50%);transform:rotate(var(--r,-3deg));pointer-events:none;opacity:.9}
+.circ .fn{position:absolute;right:-14px;top:-2px;margin:0}
+.led td.pick{padding-right:24px}
+
+/* trial balance */
+.tb{font-size:14.5px;min-width:1000px}
+.tb th,.tb td{padding:8px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule)}
+.tb td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14px}
+.tb td:not(:first-child),.tb thead th:not(:first-child){padding-right:22px;padding-left:6px}
+.tb th:first-child,.tb td:first-child{text-align:left;position:sticky;left:0;background:var(--sheet);z-index:1;border-right:1px solid var(--rule-2)}
+.tb thead th{vertical-align:bottom;font:700 11.5px var(--mono);letter-spacing:.02em;white-space:normal;text-transform:uppercase;color:var(--green);border-bottom:2px solid var(--green);padding-top:12px}
+.tb thead th button{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer;text-transform:inherit;letter-spacing:inherit;text-align:inherit}
+.tb thead th button:hover{text-decoration:underline}
+.tb thead th button svg{width:9px;height:10px;margin-left:4px;vertical-align:-1px}
+.tb tbody th{font-weight:400}
+.tb td:first-child,.tb th:first-child{font-family:var(--font);font-size:15px}
+.tb th:first-child small{display:block;font:500 11.5px var(--mono);color:var(--ink-3)}
+.tb th:first-child button{border:0;background:none;padding:0;font:600 15px var(--font);color:var(--ink);cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
+.tb th:first-child button:hover{text-decoration-color:var(--green)}
+.tb tr.reg th{font:700 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--green);padding-top:16px;border-bottom:1px solid var(--rule-2)}
+.tb tr.subt td,.tb tr.subt th{font-weight:600;border-top:1px solid var(--ink-2);color:var(--ink)}
+.tb tr.subt th{font-weight:700;font-size:14px}
+.tb tr.tot td,.tb tr.tot th{font-weight:700;border-bottom:3px double var(--ink);border-top:1px solid var(--ink-2)}
+.tb tr.on td{background:var(--wash)}
+.tb tr.on th{background:color-mix(in srgb,var(--green) 8%,var(--sheet))}
+
+/* auditor's notes */
+.notes{list-style:none;margin:0;padding:0;border-top:2px solid var(--green)}
+.notes li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.notes .lt{font:400 32px/0.7 var(--pen);color:var(--red);text-align:center}
+.notes p{margin:0;font-size:15.5px;max-width:78ch}
+.notes p b{font-weight:700}
+.notes .src{display:block;font:500 12px var(--mono);color:var(--ink-3);margin-top:3px}
+.notes .go{border:0;background:none;padding:4px 0;font:600 14px var(--font);color:var(--green);cursor:pointer;white-space:nowrap;text-decoration:underline;text-decoration-color:var(--rule-2);text-underline-offset:3px}
+.notes li.none{display:block;color:var(--ink-2)}
+
+/* panels */
 .two{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start}
+.two.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.two>*{min-width:0}
 .panel{background:var(--sheet);border:1.5px solid var(--green);padding:14px 16px 12px;position:relative;min-width:0}
 .panel h3{margin:0 0 2px;font:700 18px var(--slab);color:var(--green)}
 .panel .m{margin:0 0 8px;font-size:14px;color:var(--ink-2)}
 .key{display:flex;gap:6px 16px;flex-wrap:wrap;font:500 12.5px var(--mono);color:var(--ink-2);margin:4px 0 6px}
 .key i{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:6px}
 .key i.p{border:1.5px solid var(--green)}.key i.c{background:var(--green)}.key i.l{background:var(--red)}
+.key i.n{width:14px;height:0;border-top:2px solid var(--ink);vertical-align:3px}
 .plot svg{display:block;width:100%;height:auto;touch-action:pan-y}
 .ax{font:500 11px var(--mono);fill:var(--ink-3)}
 .tip{position:absolute;pointer-events:none;background:var(--sheet);border:1.5px solid var(--green);padding:8px 10px;font:500 12.5px/1.5 var(--mono);white-space:nowrap;opacity:0;z-index:3;transform:translate(-50%,calc(-100% - 10px))}
@@ -95,53 +158,70 @@ table{width:100%;border-collapse:collapse}
 .strip div:last-child{border-right:0}
 .disb{width:100%;font-size:14.5px}
 .disb td{padding:6px 0;border-bottom:1px solid var(--rule)}
-.disb td.num{text-align:right;padding-left:10px}
+.disb td.num{text-align:right;padding-left:10px;font-family:var(--mono);font-size:14px}
 .disb i{display:inline-block;width:12px;height:12px;margin-right:8px;vertical-align:-1px;border:1px solid var(--ink)}
 .disb tr.t td{font-weight:700;border-bottom:3px double var(--ink)}
 
 /* sub-ledger */
 .mix td{padding:8px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
-.mix td.num{text-align:right;padding-left:12px;white-space:nowrap}
+.mix td.num{text-align:right;padding-left:12px;white-space:nowrap;font-family:var(--mono);font-size:14px}
 .mix .bar{height:9px;background:var(--green);margin-top:5px}
 
-/* adjusting entries */
+/* adjusting entries + reconciliation */
 .adj{list-style:none;margin:0;padding:0;border-top:2px solid var(--green)}
 .adj li{display:grid;grid-template-columns:64px 92px minmax(0,1fr);gap:12px;padding:11px 0;border-bottom:1px solid var(--rule);align-items:baseline;font-size:15px}
 .adj .no{font:600 12.5px var(--mono);color:var(--green)}
 .adj b{font:600 17px var(--mono);text-align:right}
 .adj span{color:var(--ink-2)}
+.rec{width:100%;margin-bottom:18px}
+.rec caption{text-align:left;font:700 16px var(--slab);color:var(--green);padding-bottom:6px}
 .rec td,.rec th{padding:9px 10px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
 .rec th{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--green);border-bottom:2px solid var(--green)}
+.rec tbody th{font-weight:400}
+.rec tr.t th{font-weight:700;border-bottom:3px double var(--ink)}
 .rec td:first-child,.rec th:first-child{text-align:left;padding-left:0}
-.rec{width:100%}.rec td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13.5px}
-.rec td:first-child{font-family:var(--font);font-size:15px}
+.rec td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13.5px}
+.rec tbody th{font-family:var(--font);font-size:15px}
 .rec .ok{color:var(--green);font-weight:600}
-.rec .only-sm{font-size:12px;color:var(--ink-3)}
 .tick{width:14px;height:12px;vertical-align:-1px;margin-right:5px}
 .rec tr.t td{font-weight:700;border-bottom:3px double var(--ink)}
+
+/* notes to the accounts */
+.nta{margin:0;list-style:none;columns:2;column-gap:36px;border-top:2px solid var(--green);padding:6px 0 0}
+.nta li{break-inside:avoid;padding:8px 0;font-size:14.5px;color:var(--ink-2);display:grid;grid-template-columns:28px minmax(0,1fr);gap:6px}
+.nta li b{color:var(--ink)}
+.nta .n{font:600 13px var(--mono);color:var(--green)}
 footer{margin-top:40px;padding-top:12px;border-top:3px double var(--green);color:var(--ink-2);font-size:13.5px;line-height:1.7}
 .only-sm{display:none}
 
-.two.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.two>*{min-width:0}
-@media (max-width:980px){.two,.two.even{grid-template-columns:1fr}}
+.two.even.adjrec{grid-template-columns:minmax(0,1fr) minmax(0,1.25fr)}
+@media (max-width:1420px){.two.even.adjrec{grid-template-columns:1fr}}
+@media (max-width:980px){.two,.two.even{grid-template-columns:1fr}.nta{columns:1}}
 @media (max-width:700px){
   .wrap{padding:18px 16px 44px}
   .head{grid-template-columns:1fr}
   .ctl{width:100%}.ctl label{flex:1 1 140px}.ctl select{width:100%}
   .memo{grid-template-columns:1fr;gap:4px;padding:16px 0}
+  .tabs{padding-left:0;display:grid;grid-template-columns:repeat(4,1fr);overflow:visible}
+  .tabs button{white-space:normal;line-height:1.1;padding-inline:6px;font-size:13px;clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 100%,0 100%)}
+  .tabs button small{display:none}
   .led{min-width:0}
-  .led th:first-child,.led td:first-child{white-space:normal;width:55%}
+  .led th:first-child,.led td:first-child{white-space:normal;width:58%}
   .led .hn{display:none}
   .led .off:not(.pick){display:none}
   .led th,.led td{padding:8px 8px}
-  .led tr.sub td:first-child{padding-left:16px}
+  .led tr.sub th{padding-left:16px}
+  .tb{min-width:820px}
+  .tb th:first-child,.tb td:first-child{width:38%;max-width:9.5rem;white-space:normal}
   .only-sm{display:block}
-  .adj li{grid-template-columns:52px 70px minmax(0,1fr);gap:8px}
+  .notes li{grid-template-columns:28px minmax(0,1fr)}
+  .notes .go{grid-column:2;justify-self:start}
+  .adj li{grid-template-columns:52px 76px minmax(0,1fr);gap:8px}
   .rec .hide-sm{display:none}
-  .rec .only-sm{display:block}
+  .rec span.only-sm{font-size:12px;color:var(--ink-3)}
   .rec td,.rec th{padding:8px 4px}
   .rec td{font-size:12.5px}
+  .pulse .cap span:nth-child(2){display:none}
 }
 </style>
 </head>
@@ -150,21 +230,33 @@ footer{margin-top:40px;padding-top:12px;border-top:3px double var(--green);color
   <header class="head">
     <div>
       <h1>Practice Pulse <span class="tag">Synthetic data</span></h1>
-      <p class="sub" id="sub">Ledger of a five-office dental group</p>
+      <p class="sub" id="sub"></p>
     </div>
     <div class="ctl">
       <label>Period<select id="range"><option value="12">Last 12 months</option><option value="ytd">Year to date</option><option value="all">All months</option></select></label>
       <label>Office<select id="loc"></select></label>
     </div>
   </header>
+  <figure class="pulse"><svg id="pulse" aria-hidden="true"></svg><figcaption class="cap" id="pulseCap"></figcaption></figure>
 
   <section class="memo" aria-label="Summary"><div class="k">Memorandum</div><p id="memo"></p></section>
 
   <section class="sec" aria-labelledby="lH">
-    <div class="sec-h"><h2 id="lH">The ledger</h2><p id="lSub"></p></div>
-    <div class="sheet"><table class="led" id="led"></table></div>
-    <p class="note only-sm">On a phone the ledger shows one column at a time; pick an office above to change it. Small figures are the change against the prior period (for year to date, the same months a year earlier).</p>
-    <p class="note">Every ratio is worked from the period’s summed totals, not an average of monthly ratios. Operating profit is collections less payroll, supplies, lab fees, overhead and ad spend: a management figure, not GAAP. Losses are shown in red, in parentheses.</p>
+    <div class="sec-h"><h2 id="lH" tabindex="-1">The ledger</h2><p id="lSub"></p></div>
+    <div class="tabs" role="tablist" aria-label="Region" id="tabs"></div>
+    <div class="sheet" id="ledSheet" role="tabpanel"><table class="led" id="led"></table></div>
+    <p class="note only-sm">On a phone the ledger shows one column: the tab or office you picked. Small figures are the change against the prior period.</p>
+    <p class="note">Ratios are worked from the period’s summed totals, not averages of monthly ratios. Write-offs are deductions, shown in parentheses. Red marks losses and the auditor’s exceptions; a letter beside a figure points to the notes below the trial balance.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="tH">
+    <div class="sec-h"><h2 id="tH">Trial balance by office</h2><p id="tSub"></p></div>
+    <div class="sheet"><table class="tb" id="tb"></table></div>
+  </section>
+
+  <section class="sec" aria-labelledby="aH">
+    <div class="sec-h"><h2 id="aH">Auditor’s notes</h2><p id="aSub"></p></div>
+    <ol class="notes" id="notes"></ol>
   </section>
 
   <section class="sec two">
@@ -195,15 +287,20 @@ footer{margin-top:40px;padding-top:12px;border-top:3px double var(--green);color
     </div>
   </section>
 
-  <section class="sec two even">
+  <section class="sec two even adjrec">
     <div>
-      <div class="sec-h"><h2>Adjusting entries</h2><p>What the pipeline corrected before anything was posted, counted on every build.</p></div>
+      <div class="sec-h"><h2>Adjusting entries</h2><p>What the pipeline corrected before anything was posted, counted on every export.</p></div>
       <ul class="adj" id="adj"></ul>
     </div>
     <div>
-      <div class="sec-h"><h2>Reconciliation</h2><p>Completed work in each practice system after the adjusting entries, against the ledger, all months. The build fails if any line is off by more than a cent.</p></div>
-      <div style="overflow-x:auto"><table class="rec" id="rec"></table></div>
+      <div class="sec-h"><h2>Reconciliation</h2><p>Each practice system after the adjusting entries, against the ledger, all months. The build fails if any line is off by more than a cent.</p></div>
+      <div style="overflow-x:auto" id="recs"></div>
     </div>
+  </section>
+
+  <section class="sec" aria-labelledby="nH">
+    <div class="sec-h"><h2 id="nH">Notes to the accounts</h2></div>
+    <ol class="nta" id="nta"></ol>
   </section>
 
   <footer id="foot"></footer>
@@ -218,9 +315,13 @@ const rows = D.kpis.map(r=>Object.fromEntries(K.map((c,i)=>[c,r[i]])));
 const mixRows = D.mix.map(r=>({loc:r[0],month:r[1],cat:r[2],n:r[3],prod:r[4]}));
 const months = [...new Set(rows.map(r=>r.month_start))].sort();
 const LOCS = D.locations, LOC = Object.fromEntries(LOCS.map(l=>[l.id,l]));
+const REGIONS = [...new Set(LOCS.map(l=>l.region))];
 const PMS = {open_dental:'Open Dental',dentrix_ascend:'Dentrix Ascend',dolphin:'Dolphin'};
+const TYPE = {general:'general',orthodontics:'orthodontic'};
 const last = months[months.length-1];
-let st = {range:'12', loc:'all'};
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+// scope: 'all' | 'r:<region>' | '<location_id>'
+let st = {range:'12', scope:'all', sort:null, dir:-1};
 
 const mon = (m,long) => new Date(m+'-15').toLocaleDateString('en-US',long?{month:'short',year:'numeric'}:{month:'short',year:'2-digit'});
 const money = (v,dp=0) => { const s='$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp}); return v<0?`(${s})`:s; };
@@ -229,84 +330,217 @@ const pct = (v,d=1) => v==null||!isFinite(v)?'–':(v<0?'(':'')+Math.abs(v*100).
 const int = v => Math.round(v).toLocaleString('en-US');
 const sum = (a,k) => a.reduce((s,r)=>s+(r[k]||0),0);
 const neg = (v,html) => v<0?`<span class="neg">${html}</span>`:html;
+const median = a => { const s=a.slice().sort((x,y)=>x-y), n=s.length; return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2; };
 
 function sel(r){ if(r==='all') return months.slice(); if(r==='ytd') return months.filter(m=>m.startsWith(last.slice(0,4))); return months.slice(-12); }
 function prior(ms){
   if(st.range==='ytd'){ const y=String(+last.slice(0,4)-1), pm=ms.map(m=>y+m.slice(4)); return pm.every(m=>months.includes(m))?pm:null; }
   const i=months.indexOf(ms[0]), n=ms.length; return i-n>=0?months.slice(i-n,i):null; }
 const priorLabel = ms => st.range==='ytd'?`the same months of ${+last.slice(0,4)-1}`:`the prior ${ms.length} months`;
-function agg(loc, ms){
-  const set=new Set(ms), rs=rows.filter(r=>set.has(r.month_start)&&(loc==='all'||r.location_id===loc));
+const isOffice = s => s!=='all' && !s.startsWith('r:');
+const inScope = (id, scope) => scope==='all' || (scope.startsWith('r:') ? LOC[id].region===scope.slice(2) : id===scope);
+const scopeIds = scope => LOCS.filter(l=>inScope(l.id,scope)).map(l=>l.id);
+function agg(scope, ms){
+  const set=new Set(ms), rs=rows.filter(r=>set.has(r.month_start)&&inScope(r.location_id,scope));
   const a={}; K.slice(2).forEach(c=>a[c]=sum(rs,c));
-  a.ratio=a.collections/a.gross_production; a.margin=a.operating_profit/a.collections; a.pph=a.gross_production/a.provider_hours;
-  a.cpnp=a.ad_spend/a.new_patients; a.payroll_pct=a.payroll_cost/a.gross_production;
+  a.rate=a.collections/a.net_production; a.wo=a.write_offs/a.gross_production; a.margin=a.operating_profit/a.collections;
+  a.pph=a.gross_production/a.provider_hours; a.cpnp=a.ad_spend/a.new_patients; a.payroll_pct=a.payroll_cost/a.gross_production;
+  a.supply_pct=a.supply_cost/a.gross_production; a.neg_wo=-a.write_offs;
   return a;
 }
-const scopeName = l => l==='all'?'the group':LOC[l].name;
-const periodName = ms => st.range==='12'?`the 12 months to ${mon(ms[ms.length-1],1)}`:st.range==='ytd'?`${last.slice(0,4)} to date (${mon(ms[0],1)}–${mon(ms[ms.length-1],1)})`:`all ${ms.length} months, ${mon(ms[0],1)} to ${mon(ms[ms.length-1],1)}`;
+const scopeName = s => s==='all'?'the group':s.startsWith('r:')?`the ${s.slice(2)} region`:LOC[s].name;
+const Cap = t => t[0].toUpperCase()+t.slice(1);
+const periodName = ms => st.range==='12'?`the 12 months to ${mon(ms[ms.length-1],1)}`:st.range==='ytd'?`${last.slice(0,4)} to date (${mon(ms[0],1)} to ${mon(ms[ms.length-1],1)})`:`all ${ms.length} months, ${mon(ms[0],1)} to ${mon(ms[ms.length-1],1)}`;
+const go = id => { setScope(id); $('lH').scrollIntoView({behavior:reduced()}); $('lH').focus({preventScroll:true}); };
+const FN = l => `<span class="fn"><span class="vh">see note </span>${l}</span>`;
 
-/* controls */
-$('loc').innerHTML=`<option value="all">All offices (group)</option>`+LOCS.map(l=>`<option value="${l.id}">${l.name}</option>`).join('');
+/* ---------- controls ---------- */
+$('loc').innerHTML=`<option value="">All offices</option>`+REGIONS.map(r=>`<optgroup label="${r}">`+LOCS.filter(l=>l.region===r).map(l=>`<option value="${l.id}">${l.name}</option>`).join('')+'</optgroup>').join('');
 $('range').addEventListener('change',e=>{st.range=e.target.value;render()});
-$('loc').addEventListener('change',e=>{st.loc=e.target.value;render()});
-$('sub').innerHTML=`Ledger of a five-office dental group, Tampa Bay · three practice systems and four back-office tools · <b>${mon(months[0],1)} to ${mon(last,1)}</b>`;
+$('loc').addEventListener('change',e=>{ setScope(e.target.value || (isOffice(st.scope)?'r:'+LOC[st.scope].region:st.scope)); });
+function setScope(s){ st.scope=s; render(); }
+const nSys = new Set(LOCS.map(l=>l.pms)).size;
+$('sub').innerHTML=`Ledger of an ${LOCS.length}-office dental group in ${REGIONS.length} regions · ${nSys} practice systems and four back-office tools · <b>${mon(months[0],1)} to ${mon(last,1)}</b>`;
+
+function renderTabs(){
+  const cur = isOffice(st.scope)?'r:'+LOC[st.scope].region:st.scope;
+  const tabs=[['all','Group',LOCS.length],...REGIONS.map(r=>['r:'+r,r,LOCS.filter(l=>l.region===r).length])];
+  $('tabs').innerHTML=tabs.map(([v,t,n],i)=>`<button role="tab" id="tab${i}" aria-controls="ledSheet" aria-selected="${v===cur}" tabindex="${v===cur?0:-1}" data-s="${v}">${t}<small>${n} offices</small></button>`).join('');
+  const bs=[...$('tabs').querySelectorAll('button')];
+  $('ledSheet').setAttribute('aria-labelledby',bs.find(b=>b.getAttribute('aria-selected')==='true').id);
+  const pick=b=>{ setScope(b.dataset.s); $('tabs').querySelector('[aria-selected="true"]').focus(); };
+  bs.forEach((b,i)=>{ b.addEventListener('click',()=>pick(b));
+    b.addEventListener('keydown',e=>{ const j={ArrowRight:(i+1)%bs.length,ArrowLeft:(i-1+bs.length)%bs.length,Home:0,End:bs.length-1}[e.key]; if(j!=null){e.preventDefault();pick(bs[j]);} }); });
+  const tabName = cur==='all'?`All ${LOCS.length} offices`:`All ${scopeIds(cur).length} offices in ${cur.slice(2)}`;
+  $('loc').options[0].textContent = tabName;
+  $('loc').value = isOffice(st.scope) ? st.scope : '';
+}
+
+/* ---------- exceptions: each office against others of the same type ---------- */
+const CHECKS=[
+  {k:'rate', bad:(v,p)=>v<p-0.025,
+   say:(l,v,p,a)=>`<b>${l.name}</b> collected <b>${pct(v)}</b> of net production, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((p-v)*a.net_production)}</b> not collected.`,
+   src:'Practice system payments against production less write-offs', impact:(v,p,a)=>(p-v)*a.net_production},
+  {k:'wo', bad:(v,p)=>v>p+0.03,
+   say:(l,v,p,a)=>`<b>${l.name}</b> wrote off <b>${pct(v)}</b> of gross production to insurance contracts and discounts, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.gross_production)}</b> more.`,
+   src:'Practice system adjustments', impact:(v,p,a)=>(v-p)*a.gross_production},
+  {k:'payroll_pct', bad:(v,p)=>v>p+0.04,
+   say:(l,v,p,a)=>`<b>${l.name}</b> spent <b>${pct(v)}</b> of production on payroll, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.gross_production)}</b> more.`,
+   src:'UKG payroll register against production', impact:(v,p,a)=>(v-p)*a.gross_production},
+  {k:'supply_pct', bad:(v,p)=>v>p*1.2,
+   say:(l,v,p,a)=>`<b>${l.name}</b> spent <b>${pct(v)}</b> of production on supplies, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.gross_production)}</b> more.`,
+   src:'Henry Schein orders against production', impact:(v,p,a)=>(v-p)*a.gross_production},
+  {k:'cpnp', bad:(v,p)=>v>p*1.3,
+   say:(l,v,p,a)=>`<b>${l.name}</b> spent <b>${money(v)}</b> of paid search per new patient, against ${money(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.new_patients)}</b> more.`,
+   src:'Google Ads spend against first visits', impact:(v,p,a)=>(v-p)*a.new_patients},
+];
+function exceptions(ms){
+  const A=Object.fromEntries(LOCS.map(l=>[l.id,agg(l.id,ms)]));
+  const out=[];
+  LOCS.forEach(l=>{
+    const peers=LOCS.filter(x=>x.specialty===l.specialty&&x.id!==l.id);
+    CHECKS.forEach(c=>{
+      const v=A[l.id][c.k], p=median(peers.map(x=>A[x.id][c.k]));
+      if(isFinite(v)&&isFinite(p)&&c.bad(v,p)) out.push({id:l.id,k:c.k,c,v,p,a:A[l.id],impact:c.impact(v,p,A[l.id])});
+    });
+  });
+  out.sort((x,y)=>y.impact-x.impact);
+  out.forEach((e,i)=>e.letter=String.fromCharCode(97+i));
+  return {list:out, byKey:Object.fromEntries(out.map(e=>[e.id+'|'+e.k,e])), A};
+}
+const RAD=['50% 46% 52% 48% / 58% 50% 54% 46%','47% 53% 45% 55% / 52% 58% 46% 50%','54% 44% 50% 50% / 50% 54% 50% 56%','46% 52% 54% 48% / 56% 46% 58% 48%'];
+const circ = (html, e) => { if(!e) return html; const i=e.letter.charCodeAt(0)-97;
+  return `<span class="circ" style="--r:${[-3,2,-5,1,-2,4][i%6]}deg;--b:${RAD[i%4]}">${html}${FN(e.letter)}</span>`; };
+
+/* ---------- running line ---------- */
+function pulse(ms){
+  const sv=$('pulse'), W=Math.max(300,sv.clientWidth||1000), H=58, T=6, B=6;
+  const S=months.map(m=>agg(st.scope,[m]).collections), mx=Math.max(...S), mn=Math.min(...S)*0.9;
+  const x=i=>i*(W-8)/(months.length-1)+4, y=v=>T+(H-T-B)*(1-(v-mn)/(mx-mn));
+  const i0=months.indexOf(ms[0]), i1=months.indexOf(ms[ms.length-1]);
+  const path=(a,b)=>S.slice(a,b+1).map((v,j)=>`${j?'L':'M'}${x(a+j).toFixed(1)} ${y(v).toFixed(1)}`).join('');
+  let g=`<line x1="0" x2="${W}" y1="${H-1}" y2="${H-1}" stroke="var(--rule)"/>`;
+  g+=`<path d="${path(0,months.length-1)}" fill="none" stroke="var(--ink-3)" stroke-width="1.2" stroke-dasharray="2 4"/>`;
+  g+=`<path d="${path(i0,i1)}" fill="none" stroke="var(--green)" stroke-width="2.4" stroke-linejoin="round"/>`;
+  g+=`<line x1="${x(i0)}" x2="${x(i0)}" y1="${T}" y2="${H-1}" stroke="var(--green)" stroke-width="1"/><circle cx="${x(i1)}" cy="${y(S[i1])}" r="3.5" fill="var(--green)"/>`;
+  sv.setAttribute('viewBox',`0 0 ${W} ${H}`); sv.innerHTML=g;
+  $('pulseCap').innerHTML=`<span>${mon(months[0])}</span><span>Collections each month, ${scopeName(st.scope)}; solid for the period shown</span><span>${mon(last)}</span>`;
+}
 
 /* ---------- ledger ---------- */
 const LINES=[
   {cat:'Revenue'},
   {k:'gross_production',t:'Gross production',f:v=>money(v)},
+  {k:'neg_wo',ck:'write_offs',t:'Less write-offs and discounts',f:v=>money(v),sub:1,ded:1,ex:'wo'},
+  {k:'net_production',t:'Net production',f:v=>money(v),st:1},
   {k:'collections',t:'Collections',f:v=>money(v)},
-  {k:'ratio',t:'Collected of production',f:v=>pct(v),sub:1,pts:1},
+  {k:'rate',t:'Collection rate on net production',f:v=>pct(v),sub:1,pts:1,ex:'rate'},
   {cat:'Costs'},
-  {k:'payroll_cost',t:'Payroll',f:v=>money(v),sub:1,cost:1},
-  {k:'supply_cost',t:'Supplies',f:v=>money(v),sub:1,cost:1},
-  {k:'lab_fees',t:'Lab fees',f:v=>money(v),sub:1,cost:1},
-  {k:'overhead_cost',t:'Overhead',f:v=>money(v),sub:1,cost:1},
-  {k:'ad_spend',t:'Paid search',f:v=>money(v),sub:1,cost:1},
+  {k:'payroll_cost',t:'Payroll',f:v=>money(v),sub:1,ex:'payroll_pct'},
+  {k:'supply_cost',t:'Supplies',f:v=>money(v),sub:1,ex:'supply_pct'},
+  {k:'lab_fees',t:'Lab fees',f:v=>money(v),sub:1},
+  {k:'overhead_cost',t:'Overhead',f:v=>money(v),sub:1},
+  {k:'ad_spend',t:'Paid search',f:v=>money(v),sub:1},
   {k:'operating_profit',t:'Operating profit',f:v=>money(v),foot:1},
   {k:'margin',t:'Margin on collections',f:v=>pct(v),sub:1,pts:1},
   {cat:'Patients & capacity'},
   {k:'new_patients',t:'New patients',f:v=>int(v)},
   {k:'patient_visits',t:'Patient visits',f:v=>int(v),sub:1},
-  {k:'cpnp',t:'Paid search spend per new patient',f:v=>money(v,2),sub:1,cost:1},
+  {k:'cpnp',t:'Paid search per new patient',f:v=>money(v,2),sub:1,ex:'cpnp'},
   {k:'pph',t:'Production per provider hour',f:v=>money(v)},
-  {k:'payroll_pct',t:'Payroll share of production',f:v=>pct(v),sub:1,pts:1,cost:1},
+  {k:'payroll_pct',t:'Payroll share of production',f:v=>pct(v),sub:1,pts:1},
 ];
 function chg(l,a,p){
   if(!p) return '';
-  const cur=a[l.k], pr=p[l.k]; if(pr==null||!isFinite(pr)||pr===0) return '';
+  const k=l.ck||l.k, cur=a[k], pr=p[k]; if(pr==null||!isFinite(pr)||pr===0) return '';
   let txt;
   if(l.pts){ const d=(cur-pr)*100; txt=Math.abs(d)<.05?'0.0 pts':`${d>=0?'+':'−'}${Math.abs(d).toFixed(1)} pts`; }
   else { const d=(cur-pr)/Math.abs(pr)*100; txt=Math.abs(d)<.05?'0.0%':`${d>=0?'+':'−'}${Math.abs(d).toFixed(1)}%`; }
   return `<span class="chg">${txt}</span>`;
 }
-function renderLedger(ms,pm){
-  const cols=[...LOCS.map(l=>l.id),'all'];
+function renderLedger(ms,pm,EX){
+  const office = isOffice(st.scope) ? st.scope : null;
+  const cols=[...(office?[office]:[]), ...REGIONS.map(r=>'r:'+r), 'all'];
   const A=Object.fromEntries(cols.map(c=>[c,agg(c,ms)])), P=pm?Object.fromEntries(cols.map(c=>[c,agg(c,pm)])):null;
-  const pick=st.loc;
-  let h=`<colgroup><col>${cols.map(c=>`<col class="${c===pick?'on':''}">`).join('')}</colgroup><thead><tr><th scope="col">${pm?'<span class="hn">Small figures: change vs '+priorLabel(ms)+'</span>':''}</th>`+
-    cols.map(c=>`<th scope="col" class="${c==='all'?'grp ':''}${c===pick?'pick ':''}off" data-loc="${c}" tabindex="0">${c==='all'?'Group':LOC[c].name}<small>${c==='all'?'5 offices':PMS[LOC[c].pms]+(LOC[c].specialty==='orthodontics'?' · ortho':'')}</small></th>`).join('')+`</tr></thead><tbody>`;
+  const head = c => c==='all'?['Group',`${LOCS.length} offices`]:c.startsWith('r:')?[c.slice(2),`${scopeIds(c).length} offices`]:[LOC[c].name,`${PMS[LOC[c].pms]}${LOC[c].specialty==='orthodontics'?' · ortho':''}`];
+  const cls = c => `${c==='all'||(office&&c==='r:'+REGIONS[0])?'grp ':''}${c===st.scope?'pick ':''}off`;
+  const marks=(c,ex)=> ex ? EX.list.filter(e=>e.k===ex&&inScope(e.id,c)) : [];
+  let h=`<colgroup><col>${cols.map(c=>`<col class="${c===st.scope?'on':''}">`).join('')}</colgroup><thead><tr><th scope="col">${pm?'<span class="hn">Small figures: change vs '+priorLabel(ms)+'</span>':''}</th>`+
+    cols.map(c=>{const [t,s]=head(c);return `<th scope="col" class="${cls(c)}">${t}<small>${s}</small></th>`}).join('')+`</tr></thead><tbody>`;
   LINES.forEach(l=>{
-    if(l.cat){ h+=`<tr class="cat"><td>${l.cat}</td>${cols.map(c=>`<td class="${c==='all'?'grp ':''}${c===pick?'pick ':''}off"></td>`).join('')}</tr>`; return; }
-    h+=`<tr class="${l.sub?'sub':''}${l.foot?' foot':''}"><td>${l.t}</td>`+cols.map(c=>{ const v=A[c][l.k]; return `<td class="${c==='all'?'grp ':''}${c===pick?'pick ':''}off">${neg(v,l.f(v))}${P?chg(l,A[c],P[c]):''}</td>`; }).join('')+'</tr>';
+    if(l.cat){ h+=`<tr class="cat"><td>${l.cat}</td>${cols.map(c=>`<td class="${cls(c)}"></td>`).join('')}</tr>`; return; }
+    h+=`<tr class="${l.sub?'sub':''}${l.foot?' foot':''}${l.st?' st':''}"><th scope="row">${l.t}</th>`+cols.map(c=>{
+      const v=A[c][l.k]; let html=l.ded?l.f(v):neg(v,l.f(v));
+      const mk=marks(c,l.ex);
+      if(mk.length) html = c===office ? `<span class="neg">${circ(html,mk[0])}</span>` : html+FN(mk.map(e=>e.letter).join(', '));
+      return `<td class="${cls(c)}">${html}${P?chg(l,A[c],P[c]):''}</td>`; }).join('')+'</tr>';
   });
   $('led').innerHTML=h+'</tbody>';
-  $('led').querySelectorAll('thead th[data-loc]').forEach(th=>{ const go=()=>{st.loc=th.dataset.loc;$('loc').value=st.loc;render()};
-    th.addEventListener('click',go); th.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}); });
-  $('lSub').textContent=`${periodName(ms)[0].toUpperCase()+periodName(ms).slice(1)}. Select an office heading to carry it through the page.`;
-  return A;
+  $('lSub').textContent=`${Cap(periodName(ms))}. Pick a region tab or an office; the choice carries through the page.`;
+}
+
+/* ---------- trial balance ---------- */
+const ARROW=d=>`<svg viewBox="0 0 9 10" aria-hidden="true"><path d="${d<0?'M4.5 1v8M1 5.5l3.5 3.5 3.5-3.5':'M4.5 9V1M1 4.5L4.5 1 8 4.5'}" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`;
+const TB=[
+  {k:'gross_production',t:'Gross production',f:v=>money(v)},
+  {k:'wo',t:'Write-offs',f:v=>pct(v),ex:'wo'},
+  {k:'net_production',t:'Net production',f:v=>money(v)},
+  {k:'rate',t:'Collection rate',f:v=>pct(v),ex:'rate'},
+  {k:'payroll_pct',t:'Payroll',f:v=>pct(v),ex:'payroll_pct'},
+  {k:'supply_pct',t:'Supplies',f:v=>pct(v),ex:'supply_pct'},
+  {k:'cpnp',t:'Search / new pt',f:v=>money(v),ex:'cpnp'},
+  {k:'operating_profit',t:'Operating profit',f:v=>money(v)},
+  {k:'margin',t:'Margin',f:v=>pct(v)},
+];
+function renderTB(ms,EX){
+  const regionScope = st.scope==='all'?null:st.scope.startsWith('r:')?st.scope.slice(2):LOC[st.scope].region;
+  const regs = regionScope?[regionScope]:REGIONS;
+  const row=id=>{ const a=EX.A[id], l=LOC[id];
+    return `<tr class="${id===st.scope?'on':''}"><th scope="row"><button data-id="${id}">${l.name}</button><small>${PMS[l.pms]} · ${l.specialty==='orthodontics'?'ortho':'general'}</small></th>`+
+      TB.map(c=>{ const v=a[c.k], e=c.ex&&EX.byKey[id+'|'+c.ex]; return `<td>${e?`<span class="neg">${circ(c.f(v),e)}</span>`:neg(v,c.f(v))}</td>`; }).join('')+'</tr>'; };
+  const tot=(scope,label,cls)=>{ const a=agg(scope,ms); return `<tr class="${cls}"><th scope="row">${label}</th>`+TB.map(c=>`<td>${neg(a[c.k],c.f(a[c.k]))}</td>`).join('')+'</tr>'; };
+  let h=`<thead><tr><th scope="col">Office</th>`+TB.map(c=>`<th scope="col"${st.sort===c.k?` aria-sort="${st.dir<0?'descending':'ascending'}"`:''}><button data-k="${c.k}">${c.t}${st.sort===c.k?ARROW(st.dir):''}</button></th>`).join('')+`</tr></thead><tbody>`;
+  regs.forEach(r=>{
+    const ids=LOCS.filter(l=>l.region===r).map(l=>l.id);
+    if(st.sort) ids.sort((x,y)=>st.dir*(EX.A[x][st.sort]-EX.A[y][st.sort]));
+    if(regs.length>1) h+=`<tr class="reg"><th scope="rowgroup" colspan="${TB.length+1}">${r}</th></tr>`;
+    h+=ids.map(row).join('');
+    h+=tot('r:'+r, regs.length>1?`${r} subtotal`:`${r} total`, regs.length>1?'subt':'tot');
+  });
+  if(regs.length>1) h+=tot('all','Group total','tot');
+  $('tb').innerHTML=h+'</tbody>';
+  $('tb').querySelectorAll('thead button').forEach(b=>b.addEventListener('click',()=>{ const k=b.dataset.k; if(st.sort===k) st.dir*=-1; else {st.sort=k; st.dir=-1;} renderTB(sel(st.range),EX); $('tb').querySelector(`thead button[data-k="${k}"]`).focus(); }));
+  $('tb').querySelectorAll('tbody th button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
+  const n=regs.reduce((s,r)=>s+LOCS.filter(l=>l.region===r).length,0);
+  $('tSub').textContent=`${n} offices, ${periodName(ms)}. Select a heading to sort within each region, or an office name to open it. Circled figures carry an auditor’s note.`;
+}
+
+/* ---------- auditor's notes ---------- */
+function renderNotes(ms,EX){
+  const ids=new Set(scopeIds(st.scope));
+  const list=EX.list.filter(e=>ids.has(e.id));
+  $('aSub').textContent=`Each office against the median of the other offices of the same type, ${periodName(ms)}. Largest dollar effect first; thresholds in note 6.`;
+  $('notes').innerHTML = list.length ? list.map(e=>`<li><span class="lt"><span class="vh">Note </span>${e.letter}</span><p>${e.c.say(LOC[e.id],e.v,e.p,e.a)}<span class="src">${e.c.src} · ${LOC[e.id].region} · ${PMS[LOC[e.id].pms]}</span></p>${e.id===st.scope?'':`<button class="go" data-id="${e.id}">Open ${LOC[e.id].name}</button>`}</li>`).join('')
+    : `<li class="none">No exceptions for ${scopeName(st.scope)} in this period: ${isOffice(st.scope)?`${LOC[st.scope].name} is inside every threshold`:`every office in ${scopeName(st.scope)} is inside the thresholds`} in note 6.</li>`;
+  $('notes').querySelectorAll('.go').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
+  return list;
 }
 
 /* ---------- memo ---------- */
-function renderMemo(ms,A){
-  const a=A[st.loc];
-  const offices=LOCS.map(l=>({l,a:A[l.id]}));
-  const topP=offices.slice().sort((x,y)=>y.a.operating_profit-x.a.operating_profit)[0], topM=offices.slice().sort((x,y)=>y.a.margin-x.a.margin)[0];
-  const lossMonths=ms.filter(m=>agg(st.loc,[m]).operating_profit<0);
-  let s=`In ${periodName(ms)}, ${scopeName(st.loc)} produced <b>${short(a.gross_production)}</b> and collected <b>${short(a.collections)}</b> (${pct(a.ratio)} of production), keeping <b>${neg(a.operating_profit,short(a.operating_profit))}</b> as operating profit, a ${pct(a.margin)} margin.`;
-  if(st.loc==='all') s+= topP.l.id===topM.l.id ? ` ${topP.l.name} led on both profit and margin.` : ` ${topP.l.name} earned the most (${short(topP.a.operating_profit)}); ${topM.l.name} kept the highest margin (${pct(topM.a.margin)}).`;
-  else { const rank=offices.slice().sort((x,y)=>y.a.operating_profit-x.a.operating_profit).findIndex(o=>o.l.id===st.loc)+1; s+=` That ranks ${['first','second','third','fourth','fifth'][rank-1]} of five offices on profit.`; }
-  if(lossMonths.length) s+=` ${lossMonths.length===1?'One month':lossMonths.length+' months'} ran at a loss (${lossMonths.map(m=>mon(m,1)).join(', ')}).`;
+function renderMemo(ms,EX,shown){
+  const a=agg(st.scope,ms);
+  const offices=scopeIds(st.scope).map(id=>({l:LOC[id],a:EX.A[id]}));
+  let s=`In ${periodName(ms)}, ${scopeName(st.scope)} produced <b>${short(a.gross_production)}</b>, wrote off <b>${short(a.write_offs)}</b> to insurance contracts and discounts, and collected <b>${short(a.collections)}</b>, ${pct(a.rate)} of net production. It kept <b>${neg(a.operating_profit,short(a.operating_profit))}</b> as operating profit, a ${pct(a.margin)} margin.`;
+  if(offices.length>1){
+    const topP=offices.slice().sort((x,y)=>y.a.operating_profit-x.a.operating_profit)[0], topM=offices.slice().sort((x,y)=>y.a.margin-x.a.margin)[0];
+    s+= topP.l.id===topM.l.id ? ` ${topP.l.name} led on both profit and margin.` : ` ${topP.l.name} earned the most (${short(topP.a.operating_profit)}); ${topM.l.name} kept the highest margin (${pct(topM.a.margin)}).`;
+  } else {
+    const all=LOCS.map(l=>({l,a:EX.A[l.id]})).sort((x,y)=>y.a.margin-x.a.margin), rank=all.findIndex(o=>o.l.id===st.scope)+1;
+    s+=` Its margin ranks ${rank} of ${LOCS.length} offices.`;
+  }
+  if(shown.length) s+=` The auditor marked ${shown.length===1?'one exception':shown.length+' exceptions'}${FN(shown.map(e=>e.letter).join(', '))}.`;
+  const loss=ms.filter(m=>agg(st.scope,[m]).operating_profit<0);
+  if(loss.length) s+=` ${loss.length===1?'One month':loss.length+' months'} ran at a loss (${loss.map(m=>mon(m,1)).join(', ')}).`;
   $('memo').innerHTML=s;
 }
 
@@ -314,88 +548,104 @@ function renderMemo(ms,A){
 function tip(host){let t=host.querySelector('.tip');if(!t){t=document.createElement('div');t.className='tip';host.appendChild(t)}return t}
 function journal(ms){
   const host=$('journal'), W=Math.max(300,host.clientWidth), H=W<480?200:240, L=50, R=6, T=10, B=24, n=ms.length;
-  const S=ms.map(m=>{const a=agg(st.loc,[m]);return {m,p:a.gross_production,c:a.collections,o:a.operating_profit}});
+  const S=ms.map(m=>{const a=agg(st.scope,[m]);return {m,p:a.gross_production,nt:a.net_production,c:a.collections,o:a.operating_profit}});
   const mx=Math.max(...S.map(s=>Math.max(s.p,s.c))), y=v=>T+(H-T-B)*(1-v/mx), bw=(W-L-R)/n, x=i=>L+i*bw;
   const step=[1,2,5,10,20,50,100,200,500].map(k=>k*Math.pow(10,Math.floor(Math.log10(mx))-1)).find(s=>mx/s<=4);
   let g=''; for(let v=0;v<=mx;v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule)"/><text class="ax" x="${L-6}" y="${y(v)+4}" text-anchor="end">${short(v).replace('.00M','M')}</text>`;
   const ev=n>18?(n>30?6:3):n>8?2:1;
   S.forEach((s,i)=>{ const w=Math.max(2,bw*.38), x0=x(i)+bw*.12;
     g+=`<rect x="${x0}" y="${y(s.p)}" width="${w}" height="${y(0)-y(s.p)}" fill="none" stroke="var(--green)" stroke-width="1.5"/>`;
+    g+=`<line x1="${x0-1}" x2="${x0+w+1}" y1="${y(s.nt)}" y2="${y(s.nt)}" stroke="var(--ink)" stroke-width="2"/>`;
     g+=`<rect x="${x0+w+1}" y="${y(s.c)}" width="${w}" height="${y(0)-y(s.c)}" fill="${s.o<0?'var(--red)':'var(--green)'}"/>`;
     if(i%ev===0) g+=`<text class="ax" x="${x(i)+bw/2}" y="${H-6}" text-anchor="middle">${mon(s.m)}</text>`; });
   g+=`<line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--ink)" stroke-width="1.5"/>`;
-  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Production and collections by month for ${scopeName(st.loc)}">${g}<rect class="hl" x="0" y="${T}" width="${bw}" height="${H-T-B}" fill="var(--wash)" opacity="0"/><rect class="hit" x="${L}" y="0" width="${W-L-R}" height="${H}" fill="transparent"/></svg>`;
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Production and collections by month for ${scopeName(st.scope)}">${g}<rect class="hl" x="0" y="${T}" width="${bw}" height="${H-T-B}" fill="var(--wash)" opacity="0"/><rect class="hit" x="${L}" y="0" width="${W-L-R}" height="${H}" fill="transparent"/></svg>`;
   const sv=host.querySelector('svg'), hl=sv.querySelector('.hl'), tp=tip(host);
   const show=e=>{ const r=sv.getBoundingClientRect(), px=(e.clientX-r.left)/r.width*W, i=Math.max(0,Math.min(n-1,Math.floor((px-L)/bw))), s=S[i];
     hl.setAttribute('x',x(i)); hl.setAttribute('opacity',1);
-    tp.innerHTML=`<b>${mon(s.m,1)}</b><br>Production ${money(s.p)}<br>Collections ${money(s.c)}<br>Profit ${neg(s.o,money(s.o))}`;
+    tp.innerHTML=`<b>${mon(s.m,1)}</b><br>Gross ${money(s.p)}<br>Net ${money(s.nt)}<br>Collected ${money(s.c)}<br>Profit ${neg(s.o,money(s.o))}`;
     tp.style.left=Math.min(Math.max((x(i)+bw/2)/W*r.width,90),r.width-90)+'px'; tp.style.top=(y(Math.max(s.p,s.c))/H*r.height)+'px'; tp.classList.add('on'); };
   sv.querySelector('.hit').addEventListener('pointermove',show); sv.querySelector('.hit').addEventListener('pointerdown',show);
   sv.querySelector('.hit').addEventListener('pointerleave',()=>{tp.classList.remove('on');hl.setAttribute('opacity',0)});
-  const loss=S.filter(s=>s.o<0), rat=S.map(s=>s.c/s.p), lo=Math.min(...rat), hi=Math.max(...rat), A=agg(st.loc,ms);
-  $('jKey').innerHTML=`<span><i class="p"></i>Production</span><span><i class="c"></i>Collections</span>${loss.length?'<span><i class="l"></i>Month at a loss</span>':''}`;
-  let cap=`${scopeName(st.loc)[0].toUpperCase()+scopeName(st.loc).slice(1)}, by month. Collections came to ${pct(A.ratio)} of production in the period; single months ran from ${pct(lo)} to ${pct(hi)}.`;
-  loss.forEach(s=>{ cap+= s.m===months[0] ? ` ${mon(s.m,1)} ran at a loss: it is the first month in the data and collected only ${pct(s.c/s.p)} of its production.` : ` ${mon(s.m,1)} ran at a loss.`; });
+  const loss=S.filter(s=>s.o<0), rat=S.map(s=>s.c/s.nt), lo=Math.min(...rat), hi=Math.max(...rat), A=agg(st.scope,ms);
+  $('jKey').innerHTML=`<span><i class="p"></i>Gross production</span><span><i class="n"></i>Net, after write-offs</span><span><i class="c"></i>Collections</span>${loss.length?'<span><i class="l"></i>Month at a loss</span>':''}`;
+  let cap=`${Cap(scopeName(st.scope))}, by month. Collections came to ${pct(A.rate)} of net production in the period; single months ran from ${pct(lo)} to ${pct(hi)}.`;
+  loss.forEach(s=>{ cap+= s.m===months[0] ? ` ${mon(s.m,1)} ran at a loss: it is the first month in the data and collected only ${pct(s.c/s.nt)} of its net production.` : ` ${mon(s.m,1)} ran at a loss.`; });
   $('jSub').textContent=cap;
 }
 function npChart(ms){
-  const host=$('np'), W=Math.max(280,host.clientWidth), H=W<480?170:190, L=34, R=6, T=10, B=24, n=ms.length;
-  const S=ms.map(m=>{const a=agg(st.loc,[m]);return {m,np:a.new_patients,ad:a.ad_spend}});
+  const host=$('np'), W=Math.max(280,host.clientWidth), H=W<480?170:190, L=38, R=6, T=10, B=24, n=ms.length;
+  const S=ms.map(m=>{const a=agg(st.scope,[m]);return {m,np:a.new_patients,ad:a.ad_spend}});
   const mx=Math.max(...S.map(s=>s.np)), y=v=>T+(H-T-B)*(1-v/mx), bw=(W-L-R)/n;
-  const step=[5,10,20,25,50,100,200].find(s=>mx/s<=4)||500;
-  let g=''; for(let v=0;v<=mx;v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule)"/><text class="ax" x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`;
+  const step=[5,10,20,25,50,100,200,250,500].find(s=>mx/s<=4)||1000;
+  let g=''; for(let v=0;v<=mx;v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule)"/><text class="ax" x="${L-6}" y="${y(v)+4}" text-anchor="end">${int(v)}</text>`;
   const ev=n>18?(n>30?6:3):n>8?2:1;
   S.forEach((s,i)=>{ g+=`<rect x="${L+i*bw+bw*.18}" y="${y(s.np)}" width="${Math.max(2,bw*.64)}" height="${y(0)-y(s.np)}" fill="var(--green-2)"/>`; if(i%ev===0) g+=`<text class="ax" x="${L+i*bw+bw/2}" y="${H-6}" text-anchor="middle">${mon(s.m)}</text>`; });
   g+=`<line x1="${L}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--ink)" stroke-width="1.5"/>`;
   host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="New patients by month">${g}<rect class="hit" x="${L}" y="0" width="${W-L-R}" height="${H}" fill="transparent"/></svg>`;
   const sv=host.querySelector('svg'), tp=tip(host);
   const show=e=>{ const r=sv.getBoundingClientRect(), px=(e.clientX-r.left)/r.width*W, i=Math.max(0,Math.min(n-1,Math.floor((px-L)/bw))), s=S[i];
-    tp.innerHTML=`<b>${mon(s.m,1)}</b><br>${int(s.np)} new patients<br>Paid search ${money(s.ad)}<br>${money(s.ad/s.np,2)} spend per new patient`;
+    tp.innerHTML=`<b>${mon(s.m,1)}</b><br>${int(s.np)} new patients<br>Paid search ${money(s.ad)}<br>${money(s.ad/s.np,2)} per new patient`;
     tp.style.left=Math.min(Math.max((L+i*bw+bw/2)/W*r.width,90),r.width-90)+'px'; tp.style.top=(y(s.np)/H*r.height)+'px'; tp.classList.add('on'); };
   sv.querySelector('.hit').addEventListener('pointermove',show); sv.querySelector('.hit').addEventListener('pointerdown',show);
   sv.querySelector('.hit').addEventListener('pointerleave',()=>tp.classList.remove('on'));
-  const a=agg(st.loc,ms);
-  $('nSub').textContent=`${int(a.new_patients)} new patients in the period; paid search spend works out to ${money(a.cpnp,2)} per new patient (all new patients, not only those from search). Hover or tap a month.`;
+  const a=agg(st.scope,ms);
+  $('nSub').textContent=`${int(a.new_patients)} new patients in the period; paid search works out to ${money(a.cpnp,2)} per new patient (all new patients, not only those from search). Hover or tap a month.`;
 }
 function disb(ms){
-  const a=agg(st.loc,ms), parts=[['Payroll',a.payroll_cost,'var(--green)'],['Supplies',a.supply_cost,'var(--green-2)'],['Lab fees',a.lab_fees,'color-mix(in srgb,var(--green) 55%,var(--sheet))'],['Overhead',a.overhead_cost,'color-mix(in srgb,var(--green) 32%,var(--sheet))'],['Paid search',a.ad_spend,'var(--ink-3)'],['Operating profit',a.operating_profit,'var(--sheet)']];
-  $('dSub').textContent=`Where ${short(a.collections)} collected by ${scopeName(st.loc)} went in the period.`;
+  const a=agg(st.scope,ms), parts=[['Payroll',a.payroll_cost,'var(--green)'],['Supplies',a.supply_cost,'var(--green-2)'],['Lab fees',a.lab_fees,'color-mix(in srgb,var(--green) 55%,var(--sheet))'],['Overhead',a.overhead_cost,'color-mix(in srgb,var(--green) 32%,var(--sheet))'],['Paid search',a.ad_spend,'var(--ink-3)'],['Operating profit',a.operating_profit,'var(--sheet)']];
+  $('dSub').textContent=`Where the ${short(a.collections)} collected by ${scopeName(st.scope)} went in the period.`;
   $('strip').setAttribute('aria-label',parts.map(p=>`${p[0]} ${pct(p[1]/a.collections)}`).join(', '));
   $('strip').innerHTML=parts.filter(p=>p[1]>0).map(p=>`<div style="flex:${p[1]};background:${p[2]}"></div>`).join('');
   $('disb').innerHTML=parts.map(p=>`<tr${p[0]==='Operating profit'?' class="t"':''}><td><i style="background:${p[2]}"></i>${p[0]}</td><td class="num">${neg(p[1],money(p[1]))}</td><td class="num">${neg(p[1],pct(p[1]/a.collections))}</td></tr>`).join('');
 }
 function mix(ms){
-  const set=new Set(ms), rs=mixRows.filter(r=>set.has(r.month)&&(st.loc==='all'||r.loc===st.loc));
+  const set=new Set(ms), rs=mixRows.filter(r=>set.has(r.month)&&inScope(r.loc,st.scope));
   const by={}; rs.forEach(r=>{by[r.cat]=by[r.cat]||{n:0,p:0};by[r.cat].n+=r.n;by[r.cat].p+=r.prod});
   const arr=Object.entries(by).sort((a,b)=>b[1].p-a[1].p), tot=arr.reduce((s,[,v])=>s+v.p,0), mx=arr[0]?arr[0][1].p:1;
-  $('mSub').textContent=`${int(arr.reduce((s,[,v])=>s+v.n,0))} completed procedures by ${scopeName(st.loc)} in the period, by type of service.`;
+  $('mSub').textContent=`${int(arr.reduce((s,[,v])=>s+v.n,0))} completed procedures by ${scopeName(st.scope)} in the period, by type of service, at gross fees.`;
   $('mix').innerHTML=arr.map(([c,v])=>`<tr><td>${c}<div class="bar" style="width:${Math.max(1,v.p/mx*100)}%"></div></td><td class="num">${money(v.p)}</td><td class="num">${pct(v.p/tot)}</td></tr>`).join('');
 }
 
-/* ---------- static: adjustments + reconciliation ---------- */
+/* ---------- static: adjustments, reconciliation, notes ---------- */
 const c=D.cleanup;
 const adj=[
   [c.dentrix_duplicates_removed,`Duplicate procedure rows from Dentrix Ascend re-exports, removed so each procedure counts once.`],
   [c.open_dental_deleted_excluded,`Deleted procedures still present in the Open Dental export, excluded from production.`],
   [c.dentrix_planned_excluded,`Treatment-plan rows in Dentrix Ascend that look like production but are not, excluded.`],
   [c.location_spellings,`Spellings of ${c.location_spellings_offices} office names in the Dentrix export (case, spaces, “Office”), mapped to one office each through a seed table.`],
+  [c.dolphin_office_codes,`Dolphin office codes (ORTHO-TB and the like), mapped to the three orthodontic offices.`],
+  [c.dentrix_accounting_negatives,`Dentrix write-offs printed accounting-style, like ($1,234.56), read as negative amounts.`],
+  [c.dolphin_sign_flips,`Dolphin adjustments recorded as positive reductions, sign-flipped so all ${int(c.adjustment_rows)} write-offs share one convention.`],
   [c.refunds,`Refunds recorded as negative payments (${money(Math.abs(c.refund_amount),2)} in all), netted out of collections.`],
 ];
 $('adj').innerHTML=adj.map(([n,t],i)=>`<li><span class="no">Adj. ${i+1}</span><b>${int(n)}</b><span>${t}</span></li>`).join('');
-const rt=D.reconciliation.reduce((s,r)=>({s:s.s+r.source_total,m:s.m+r.mart_total}),{s:0,m:0});
 const TICK='<svg class="tick" viewBox="0 0 14 12" aria-hidden="true"><path d="M1.5 6.5 L5 10 L12.5 1.5" fill="none" stroke="var(--green)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const diffCell = d => Math.abs(d)<=.01 ? `<td class="ok">${TICK}$0.00</td>` : `<td class="neg">${money(d,2)}</td>`;
-$('rec').innerHTML=`<thead><tr><th>System</th><th class="hide-sm">Completed, after cleanup</th><th>In the ledger</th><th>Difference</th></tr></thead><tbody>`+
-  D.reconciliation.map(r=>`<tr><td>${PMS[r.source]||r.source}</td><td class="hide-sm">${money(r.source_total,2)}</td><td>${money(r.mart_total,2)}<span class="only-sm">after cleanup ${money(r.source_total,2)}</span></td>${diffCell(r.mart_total-r.source_total)}</tr>`).join('')+
-  `<tr class="t"><td>Total</td><td class="hide-sm">${money(rt.s,2)}</td><td>${money(rt.m,2)}<span class="only-sm">after cleanup ${money(rt.s,2)}</span></td>${diffCell(rt.m-rt.s)}</tr></tbody>`;
+const recTable=(title,data)=>{ const rt=data.reduce((s,r)=>({s:s.s+r.source_total,m:s.m+r.mart_total}),{s:0,m:0});
+  return `<table class="rec"><caption>${title}</caption><thead><tr><th scope="col">System</th><th scope="col" class="hide-sm">In the system, after cleanup</th><th scope="col">In the ledger</th><th scope="col">Difference</th></tr></thead><tbody>`+
+  data.map(r=>`<tr><th scope="row">${PMS[r.source]||r.source}</th><td class="hide-sm">${money(r.source_total,2)}</td><td>${money(r.mart_total,2)}<span class="only-sm">system ${money(r.source_total,2)}</span></td>${diffCell(r.mart_total-r.source_total)}</tr>`).join('')+
+  `<tr class="t"><th scope="row">Total</th><td class="hide-sm">${money(rt.s,2)}</td><td>${money(rt.m,2)}<span class="only-sm">system ${money(rt.s,2)}</span></td>${diffCell(rt.m-rt.s)}</tr></tbody></table>`; };
+$('recs').innerHTML=recTable('Gross production',D.reconciliation)+recTable('Write-offs and discounts',D.write_off_reconciliation);
+$('nta').innerHTML=[
+  ['Gross production','Full fees for completed procedures in the month they were done, from Open Dental, Dentrix Ascend and Dolphin. Deleted, duplicated and treatment-plan rows are excluded first.'],
+  ['Write-offs','Insurance contractual write-offs (the gap between the fee and what the plan has agreed to pay) and courtesy discounts, in the month they were posted.'],
+  ['Net production','Gross production less write-offs: what patients and insurers actually owe.'],
+  ['Collections and collection rate','Money received in the month, net of refunds. The collection rate divides collections by net production over the whole period, as dental groups report it; single months swing with payment lag.'],
+  ['Operating profit','Collections less payroll (UKG), supplies (Henry Schein), lab fees and overhead (Sage Intacct) and paid search (Google Ads). A management figure, not GAAP.'],
+  ['Auditor’s thresholds','Each office is compared with the median of the other offices of the same type (general or orthodontic) over the selected period. It is marked when its collection rate is more than 2.5 points lower, write-offs more than 3 points higher, payroll more than 4 points higher, supplies more than 20% higher, or paid search per new patient more than 30% higher.'],
+  ['Synthetic data','The group, its offices and every figure are generated to behave like real practice exports. No patient or company data is included.'],
+].map(([t,d],i)=>`<li><span class="n">${i+1}.</span><span><b>${t}.</b> ${d}</span></li>`).join('');
 const src=D.procedure_rows_by_source;
-$('foot').innerHTML=`Synthetic data generated to behave like real practice exports; no patient or company data. Built from <code>reporting.rpt_location_monthly_kpis</code> and <code>reporting.rpt_procedure_mix_monthly</code> (dbt) · ${int(Object.values(src).reduce((a,b)=>a+b,0))} completed procedures from ${Object.keys(src).length} practice systems · exported ${D.generated} · <a href="https://github.com/evannwilsonn/practice-pulse-2.0">github.com/evannwilsonn/practice-pulse-2.0</a>`;
+$('foot').innerHTML=`Built from <code>reporting.rpt_location_monthly_kpis</code> and <code>reporting.rpt_procedure_mix_monthly</code> (dbt) · ${int(Object.values(src).reduce((a,b)=>a+b,0))} completed procedures and ${int(c.adjustment_rows)} write-offs from ${Object.keys(src).length} practice systems · exported ${D.generated} · <a href="https://github.com/evannwilsonn/practice-pulse-2.0">github.com/evannwilsonn/practice-pulse-2.0</a>`;
 
 function render(){
-  const ms=sel(st.range), pm=prior(ms);
-  const A=renderLedger(ms,pm); renderMemo(ms,A); journal(ms); npChart(ms); disb(ms); mix(ms);
+  const ms=sel(st.range), pm=prior(ms), EX=exceptions(ms);
+  renderTabs(); pulse(ms);
+  renderLedger(ms,pm,EX); renderTB(ms,EX); const shown=renderNotes(ms,EX); renderMemo(ms,EX,shown);
+  journal(ms); npChart(ms); disb(ms); mix(ms);
 }
-let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const ms=sel(st.range);journal(ms);npChart(ms)},120)});
+let rz; addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const ms=sel(st.range);pulse(ms);journal(ms);npChart(ms)},120)});
 render();
 })();
 </script>

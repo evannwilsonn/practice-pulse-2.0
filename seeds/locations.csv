@@ -1,6 +1,19 @@
-location_id,location_name,city,pms_system,specialty,opened_on
-L001,Tampa Downtown,Tampa,open_dental,general,2011-03-01
-L002,Brandon,Brandon,open_dental,general,2015-06-15
-L003,Clearwater,Clearwater,dentrix_ascend,general,2017-01-09
-L004,Sarasota,Sarasota,dentrix_ascend,general,2019-10-01
-L005,Tampa Ortho,Tampa,dolphin,orthodontics,2021-04-12
+location_id,location_name,region,metro,pms_system,specialty,opened_on
+L001,Harbor Point,Tampa Bay,Tampa,open_dental,general,2011-03-01
+L002,Bayshore,Tampa Bay,Tampa,open_dental,general,2015-06-15
+L003,Palm Terrace,Tampa Bay,Tampa,open_dental,general,2018-02-05
+L004,Heron Bay,Tampa Bay,Tampa,dentrix_ascend,general,2017-01-09
+L005,Willow Creek,Tampa Bay,Tampa,dentrix_ascend,general,2019-10-01
+L006,Harbor Point Orthodontics,Tampa Bay,Tampa,dolphin,orthodontics,2021-04-12
+L007,Marina Park,Gulf Coast,Sarasota,open_dental,general,2012-08-20
+L008,Gulf Breeze,Gulf Coast,Sarasota,open_dental,general,2016-03-14
+L009,Pelican Cove,Gulf Coast,Sarasota,open_dental,general,2020-07-06
+L010,Laurel Springs,Gulf Coast,Sarasota,dentrix_ascend,general,2014-11-03
+L011,Bramble Lane,Gulf Coast,Sarasota,dentrix_ascend,general,2019-05-20
+L012,Marina Park Orthodontics,Gulf Coast,Sarasota,dolphin,orthodontics,2022-01-10
+L013,Oak Hollow,Central Florida,Orlando,open_dental,general,2013-09-09
+L014,Maple Grove,Central Florida,Orlando,open_dental,general,2017-06-26
+L015,Sunridge,Central Florida,Orlando,open_dental,general,2018-10-15
+L016,Fairhaven,Central Florida,Orlando,dentrix_ascend,general,2015-02-23
+L017,Pinecrest,Central Florida,Orlando,dentrix_ascend,general,2021-08-02
+L018,Fairhaven Orthodontics,Central Florida,Orlando,dolphin,orthodontics,2022-09-12

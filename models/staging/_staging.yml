@@ -47,6 +47,9 @@ models:
     columns:
       - name: procedure_id
         tests: [unique, not_null]
+      - name: location_id
+        description: Mapped from the Dolphin office code through the location_aliases seed.
+        tests: [not_null]
       - name: service_date
         tests: [not_null]
 
@@ -54,6 +57,53 @@ models:
     columns:
       - name: payment_id
         tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+
+  - name: stg_open_dental__adjustments
+    description: Open Dental write-offs and discounts, negative amounts.
+    columns:
+      - name: adjustment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+      - name: adjustment_date
+        tests: [not_null]
+      - name: adjustment_amount
+        tests: [not_null]
+      - name: adjustment_type
+        tests:
+          - accepted_values: {values: [insurance_write_off, courtesy]}
+
+  - name: stg_dentrix_ascend__adjustments
+    description: Dentrix Ascend adjustments with accounting-style negatives converted to numbers.
+    columns:
+      - name: adjustment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+      - name: adjustment_date
+        tests: [not_null]
+      - name: adjustment_amount
+        tests: [not_null]
+      - name: adjustment_type
+        tests:
+          - accepted_values: {values: [insurance_write_off, courtesy]}
+
+  - name: stg_dolphin__adjustments
+    description: Dolphin adjustments, sign flipped from positive reductions to negative amounts.
+    columns:
+      - name: adjustment_id
+        tests: [unique, not_null]
+      - name: location_id
+        tests: [not_null]
+      - name: adjustment_date
+        tests: [not_null]
+      - name: adjustment_amount
+        tests: [not_null]
+      - name: adjustment_type
+        tests:
+          - accepted_values: {values: [insurance_write_off, courtesy]}
 
   - name: stg_sage_intacct__gl_detail
     columns:

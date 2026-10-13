@@ -16,9 +16,15 @@ models:
         description: Money actually received in the month, net of refunds.
       - name: collection_ratio
         description: Collections divided by production for the month. Payments lag the visit by up to 60 days, so the latest month runs low.
-      - name: collection_ratio_t3m
+      - name: write_offs
+        description: Insurance contractual write-offs and courtesy discounts posted in the month, as a positive amount.
+      - name: net_production
+        description: Gross production minus write-offs. What patients and insurers actually owe.
+      - name: collection_rate
+        description: Collections divided by net production for the month. The industry-standard collection measure.
+      - name: collection_rate_t3m
         description: >
-          Trailing three-month collections over trailing three-month production. The number to
+          Trailing three-month collections over trailing three-month net production. The number to
           judge collections on, because payment lag and big-ticket cases make single months swing.
       - name: new_patients
         description: Patients whose first completed procedure was in this month.

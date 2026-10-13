@@ -1,10 +1,37 @@
 alias_type,alias_value,location_id
-location_name,TAMPA DOWNTOWN,L001
-location_name,BRANDON,L002
-location_name,CLEARWATER,L003
-location_name,SARASOTA,L004
-location_name,TAMPA ORTHO,L005
+location_name,HARBOR POINT,L001
+location_name,BAYSHORE,L002
+location_name,PALM TERRACE,L003
+location_name,HERON BAY,L004
+location_name,HERON BAY OFFICE,L004
+location_name,WILLOW CREEK,L005
+location_name,WILLOW CREEK OFFICE,L005
+location_name,HARBOR POINT ORTHODONTICS,L006
+location_name,MARINA PARK,L007
+location_name,GULF BREEZE,L008
+location_name,PELICAN COVE,L009
+location_name,LAUREL SPRINGS,L010
+location_name,LAUREL SPRINGS OFFICE,L010
+location_name,BRAMBLE LANE,L011
+location_name,BRAMBLE LANE OFFICE,L011
+location_name,MARINA PARK ORTHODONTICS,L012
+location_name,OAK HOLLOW,L013
+location_name,MAPLE GROVE,L014
+location_name,SUNRIDGE,L015
+location_name,FAIRHAVEN,L016
+location_name,FAIRHAVEN OFFICE,L016
+location_name,PINECREST,L017
+location_name,PINECREST OFFICE,L017
+location_name,FAIRHAVEN ORTHODONTICS,L018
 open_dental_clinic,1,L001
 open_dental_clinic,2,L002
-location_name,CLEARWATER OFFICE,L003
-location_name,SARASOTA OFFICE,L004
+open_dental_clinic,3,L003
+open_dental_clinic,4,L007
+open_dental_clinic,5,L008
+open_dental_clinic,6,L009
+open_dental_clinic,7,L013
+open_dental_clinic,8,L014
+open_dental_clinic,9,L015
+dolphin_office,ORTHO-TB,L006
+dolphin_office,ORTHO-GC,L012
+dolphin_office,ORTHO-CF,L018

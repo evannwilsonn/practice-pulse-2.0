@@ -12,10 +12,11 @@ Hiring managers first, arriving from Evan Wilson's resume or LinkedIn and giving
 
 ## Product Purpose
 
-Practice Pulse 2.0 is a synthetic but realistic pipeline for five Tampa Bay dental offices running three practice-management systems (Open Dental, Dentrix Ascend, Dolphin for ortho) plus Sage Intacct, UKG, Henry Schein and Google Ads. Raw exports are loaded untouched, cleaned (three date formats, currency strings, eight spellings of office names, 897 duplicate rows, 1,484 deleted procedures, 4,406 treatment-plan rows), modelled into a star schema, tested (74 tests including reconciliation to the cent) and served as one KPI table.
+Practice Pulse 2.0 is a synthetic but realistic pipeline for an 18-office Florida dental group in three regions (Tampa Bay, Gulf Coast, Central Florida; each with three Open Dental, two Dentrix Ascend and one Dolphin orthodontic office) plus Sage Intacct, UKG, Henry Schein and Google Ads. Raw exports are loaded untouched, cleaned (three date formats, currency and accounting-style negatives, 30 spellings of office names, Dolphin office codes, 2,753 duplicate rows, 6,170 deleted procedures, 13,912 treatment-plan rows, 485,600 write-offs in three sign conventions), modelled into a star schema, tested (106 tests including production and write-off reconciliation to the cent) and served as one KPI table.
 
 The dashboard answers the owners' questions:
-- How much did each office produce and collect?
+- How much did each office and region produce, write off and collect?
+- Which offices are running off their peers, and what does it cost?
 - Which office is most profitable?
 - Where does the money go?
 - Where do new patients come from, and at what ad cost?
@@ -30,12 +31,13 @@ The page is static, with inline data (dashboard/data.json) built from DuckDB, an
 
 ## Capabilities and Constraints
 
-- Data per location and month, 2024-01 to 2026-09 (33 months × 5 locations): gross production, collections, patient visits, new patients, provider hours, payroll, supplies, lab fees, overhead, ad spend and operating profit.
+- Data per location and month, 2024-01 to 2026-09 (33 months × 18 locations): gross production, write-offs, net production, collections, patient visits, new patients, provider hours, payroll, supplies, lab fees, overhead, ad spend and operating profit.
 - Procedure mix by location, month and category (9 categories), with procedure counts and production.
 - Procedure rows by source system.
-- Locations with name, city, PMS and specialty.
+- Locations with name, region, metro, PMS and specialty.
 - Ratios are recomputed from summed totals for the selected range.
-- Collection ratio is judged on a trailing basis because single months swing with payment lag.
+- Collection rate is measured on net production over a period, because single months swing with payment lag.
+- Exceptions compare each office with the median of same-specialty peers, computed in the page from data.json.
 - Every number comes from data.json.
 
 ## Brand Commitments
@@ -60,7 +62,7 @@ dashboard/data.json; README cleanup counts and tests. No users or testimonials.
 ## Product Principles
 
 1. Lead with how the group did in the period, in a sentence.
-2. Compare offices fairly: the same definition everywhere, ratios from totals.
+2. Compare offices fairly: the same definition everywhere, ratios from totals, peers of the same type.
 3. Show the cleanup and reconciliation as part of the story.
 4. Every mark maps to real (synthetic) data and is labelled as synthetic.
 

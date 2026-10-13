@@ -6,7 +6,7 @@ with months as (
 ),
 
 spine as (
-    select l.location_id, l.location_name, l.specialty, m.month_start
+    select l.location_id, l.location_name, l.region, l.specialty, m.month_start
     from {{ ref('dim_locations') }} l
     cross join months m
 ),
@@ -29,6 +29,16 @@ new_patients as (
         cast({{ dbt.date_trunc('month', 'first_visit_date') }} as date) as month_start,
         count(*)                                                        as new_patients
     from {{ ref('int_patients__first_visit') }}
+    group by 1, 2
+),
+
+write_offs as (
+    select
+        location_id,
+        adjustment_month                                                                as month_start,
+        -sum(adjustment_amount)                                                         as write_offs,
+        -sum(case when adjustment_type = 'insurance_write_off' then adjustment_amount else 0 end) as insurance_write_offs
+    from {{ ref('fct_adjustments') }}
     group by 1, 2
 ),
 
@@ -77,9 +87,13 @@ joined as (
     select
         s.location_id,
         s.location_name,
+        s.region,
         s.specialty,
         s.month_start,
         coalesce(p.gross_production, 0)  as gross_production,
+        coalesce(w.write_offs, 0)        as write_offs,
+        coalesce(w.insurance_write_offs, 0) as insurance_write_offs,
+        coalesce(p.gross_production, 0) - coalesce(w.write_offs, 0) as net_production,
         coalesce(c.collections, 0)       as collections,
         coalesce(c.refunds, 0)           as refunds,
         coalesce(p.procedures, 0)        as procedures,
@@ -95,6 +109,7 @@ joined as (
         coalesce(m.ad_conversions, 0)    as ad_conversions
     from spine s
     left join production p    on s.location_id = p.location_id  and s.month_start = p.month_start
+    left join write_offs w    on s.location_id = w.location_id  and s.month_start = w.month_start
     left join new_patients n  on s.location_id = n.location_id  and s.month_start = n.month_start
     left join collections c   on s.location_id = c.location_id  and s.month_start = c.month_start
     left join payroll pr      on s.location_id = pr.location_id and s.month_start = pr.month_start
@@ -105,8 +120,10 @@ joined as (
 select
     *,
     collections / nullif(gross_production, 0)                      as collection_ratio,
-    sum(collections) over w3 / nullif(sum(gross_production) over w3, 0)
-                                                                   as collection_ratio_t3m,
+    collections / nullif(net_production, 0)                        as collection_rate,
+    sum(collections) over w3 / nullif(sum(net_production) over w3, 0)
+                                                                   as collection_rate_t3m,
+    write_offs / nullif(gross_production, 0)                       as write_off_pct_of_production,
     gross_production / nullif(patient_visits, 0)                   as production_per_visit,
     gross_production / nullif(provider_hours, 0)                   as production_per_provider_hour,
     payroll_cost / nullif(gross_production, 0)                     as payroll_pct_of_production,

@@ -24,10 +24,13 @@ DB = ROOT / "warehouse" / "practice_pulse.duckdb"
 SOURCES = [
     ("raw_open_dental", "procedurelog", "open_dental/procedurelog.csv", "csv"),
     ("raw_open_dental", "payment", "open_dental/payment.csv", "csv"),
+    ("raw_open_dental", "adjustment", "open_dental/adjustment.csv", "csv"),
     ("raw_dentrix_ascend", "procedures_export", "dentrix_ascend/procedures_export.csv", "csv"),
     ("raw_dentrix_ascend", "payments_export", "dentrix_ascend/payments_export.csv", "csv"),
+    ("raw_dentrix_ascend", "adjustments_export", "dentrix_ascend/adjustments_export.csv", "csv"),
     ("raw_dolphin", "transactions", "dolphin/transactions.csv", "csv;"),
     ("raw_dolphin", "receipts", "dolphin/receipts.csv", "csv;"),
+    ("raw_dolphin", "adjustments", "dolphin/adjustments.csv", "csv;"),
     ("raw_sage_intacct", "gl_detail", "sage_intacct/gl_detail.csv", "csv"),
     ("raw_ukg", "payroll_register", "ukg/payroll_register.csv", "csv"),
     ("raw_henry_schein", "supply_orders", "henry_schein/supply_orders.csv", "csv"),
@@ -47,7 +50,7 @@ def main() -> None:
         con.execute(f"create schema if not exists {schema}")
         if reader.startswith("csv"):
             delim = ";" if reader == "csv;" else ","
-            src = f"read_csv('{path}', delim='{delim}', header=true, all_varchar=true)"
+            src = f"read_csv('{path}', delim='{delim}', quote='\"', escape='\"', header=true, all_varchar=true)"
         else:
             # API payloads land untouched as one JSON column, like a Snowflake VARIANT
             src = f"(select json as payload from read_json_objects('{path}', format='newline_delimited'))"

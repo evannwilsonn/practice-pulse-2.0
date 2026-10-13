@@ -16,9 +16,13 @@
     try_to_date(trim({{ column }}), '{{ f }}')
 {%- endmacro %}
 
-{# Turn '$1,234.56', ' 1234.56 ' or '' into a number (null when blank) #}
+{# Turn '$1,234.56', ' 1234.56 ', '($1,234.56)' (accounting negative) or '' into a number (null when blank) #}
 {% macro clean_money(column) -%}
-    cast(nullif(replace(replace(trim({{ column }}), '$', ''), ',', ''), '') as decimal(12, 2))
+    cast(nullif(
+        case when trim({{ column }}) like '(%)'
+             then '-' || replace(replace(replace(replace(trim({{ column }}), '(', ''), ')', ''), '$', ''), ',', '')
+             else replace(replace(trim({{ column }}), '$', ''), ',', '')
+        end, '') as decimal(12, 2))
 {%- endmacro %}
 
 {# Normalize free-text labels before matching them to the alias seed #}
