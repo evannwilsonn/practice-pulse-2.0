@@ -206,7 +206,7 @@ A near-monochrome green book with one red ink, mirrored for dark.
 - **Soft Print Green** (printed-green-soft; night-green-soft): a second green for adjacent fills, such as new-patient bars and the supplies segment.
 
 ### Secondary
-- **Red Ink** (red-ink; coral-ink in dark): losses, reconciliation differences and the auditor's hand (circled exception figures, pencil footnote letters, note letters). In the journal it fills the collections bar for a month at a loss.
+- **Red Ink** (red-ink; coral-ink in dark): losses, reconciliation differences and the auditor's hand (circled exception figures, pencil footnote letters, exception letters and figures). In the journal it fills the collections bar for a month at a loss.
 
 ### Neutral
 - **Ledger Paper** (ledger-paper; night-paper): the page ground and the face of unselected tabs.
@@ -217,7 +217,7 @@ A near-monochrome green book with one red ink, mirrored for dark.
 - **Wash** (`rgba(44,90,55,.08)` light, `rgba(143,199,154,.08)` dark): marks the selected office column, the selected trial-balance row and the hovered journal month. Sticky cells use the opaque equivalent `color-mix(in srgb, var(--green) 8%, var(--sheet))`.
 
 ### Named Rules
-**The Red Ink Rule.** Red means a loss, a variance, or the auditor's mark, nothing else. A red negative always also carries parentheses, and a circled figure always carries a letter that points to a written note, so colour never carries the meaning alone.
+**The Red Ink Rule.** Red means a loss, a variance, or the auditor's mark, nothing else. A red negative always also carries parentheses, and a circled figure always carries a letter that points to a row in the exceptions schedule, so colour never carries the meaning alone.
 
 **The Deduction Rule.** Deductions such as write-offs and discounts sit in parentheses in ordinary ink. Parentheses say "subtract"; only red says "loss".
 
@@ -234,21 +234,21 @@ A near-monochrome green book with one red ink, mirrored for dark.
 
 ### Hierarchy
 - **Display** (Slab 700, clamp 34–54px, 1): the book title, in printed green.
-- **Headline** (Slab 700, 25px, 1.15): section heads such as The ledger, Trial balance by office, Auditor's notes, Reconciliation.
+- **Headline** (Slab 700, 25px, 1.15): section heads such as The ledger, Trial balance by office, Auditor's exceptions, Reconciliation.
 - **Title** (Slab 700, 18px): panel heads. Reconciliation table captions use 16px; ledger column heads and the Memorandum label use 15px (column heads at 1.2); tabs use 14px, 13px on phones.
 - **Memorandum** (Karla 500, clamp 18–22px, 1.45, max 62ch): the one-sentence period summary, with key figures in 700.
-- **Body** (Karla 400, 16px, 1.55). Auditor's note text runs 15.5px (max 78ch); ledger and trial-balance row labels and the pickers 15px; section captions and notes to the accounts 14.5px; panel captions and sheet notes 14px; the footer 13.5px at 1.7. Inline links and the "Open office" action are Karla 600 at 14–15px.
+- **Body** (Karla 400, 16px, 1.55). ledger and trial-balance row labels and the pickers 15px; section captions and notes to the accounts 14.5px; panel captions and sheet notes 14px; the footer 13.5px at 1.7. Inline links and office-name buttons are Karla 600 at 15px.
 - **Figure** (Overpass Mono 400, 14.5px, tabular-nums): ledger figures. Trial balance and disbursement figures use 14px, reconciliation figures 13.5px (12.5px on phones), adjusting-entry counts 600 at 17px. Change figures sit below at 12px in pencil.
 - **Label** (Mono 600, 11.5px, 0.06em, uppercase): picker labels and the synthetic tag. Trial-balance heads are mono 700 at 11.5px with 0.02em; reconciliation heads mono 700 at 12px with 0.06em; ledger category and region rows mono 700 at 12px with 0.08em.
 - **Small mono** (Mono 500): PMS names under heads and the running-line caption at 11.5px; source lines and row hints at 12px; chart keys and tooltips at 12.5px; note numbers and adjusting-entry numbers at 600, 13px and 12.5px; code at 13px; tab counts and axis labels at 11px.
-- **Pen** (Nanum Pen Script 400, red): footnote letters at 22px with line-height 0, raised to superscript; 26px beside the memorandum; auditor's note letters at 32px, 0.7.
+- **Pen** (Nanum Pen Script 400, red): footnote letters at 22px with line-height 0, raised to superscript; 26px beside the memorandum. The exceptions schedule uses plain red mono letters, not the pen.
 
 ### Named Rules
 **The Figures-in-Mono Rule.** Any number a reader might add up is set in Overpass Mono with tabular figures. Prose numbers inside sentences stay in Karla.
 
 **The Parenthesis Rule.** Negatives and deductions render as `($1,234)` or `(3.1%)`, never with a minus sign. Change figures are the exception: they are deltas and use `+` / `−`, with `pts` for ratio changes.
 
-**The One Hand Rule.** Nanum Pen Script is the auditor's pencil: single footnote and note letters in red ink, nothing else. Never set words, figures or headings in it.
+**The One Hand Rule.** Nanum Pen Script is the auditor's pencil: single footnote letters in red ink beside figures and the memorandum, nothing else. Never set words, figures or headings in it.
 
 ## Layout
 
@@ -298,8 +298,8 @@ An exception figure in the picked office's column is circled in red pencil with 
 ### Trial balance
 One row per office, Karla 600 office names underlined in feint rule (links into the ledger) with the PMS and type in mono pencil. Uppercase mono heads are sort buttons, with a drawn 9×10 arrow and `aria-sort` on the sorted column; sorting happens within each region. Region rows use the category style; subtotals are 600 over a faded-ink rule, and the group total is 700 over a 3px double rule. Exceptions are circled in place. The selected office's row takes the wash.
 
-### Auditor's notes
-An ordered list under a 2px green rule. Each note is a `36px / 1fr / auto` row: the red pen letter, the note in 15.5px Karla with figures in 700 and a 12px mono source line, and a green underlined "Open office" action. An empty scope gets a single faded sentence saying every office is inside the thresholds.
+### Auditor's exceptions
+A schedule on a framed sheet, not prose. Columns: note letter (600 15px mono, red, plain, not pen), office (underlined Karla 600 button that opens the office, with region and PMS beneath in 11.5px mono), line (Karla in faded ink with the source system beneath), figure (600 mono, red), peer median (mono ink) and effect (600 mono dollars with a short plain-English gloss such as "not collected" beneath). Rows run largest dollar effect first. On phones the head is hidden and each row becomes a `28px / 1fr / auto` grid: letter, office over line with "figure against peer median", and the effect on the right. An empty scope gets a single faded sentence saying every office is inside the thresholds.
 
 ### Panels
 A sheet with a 1.5px green frame and `14px 16px 12px` padding, holding a slab title, a faded-ink caption and the content. Chart keys are 12px swatches in 12.5px mono. Charts are flat SVG on the sheet: feint gridlines, mono pencil axes, a 1.5px ink baseline, outlined gross production with a 2px ink net tick. Tooltips are a framed sheet in 12.5px mono, and the hovered month gets the wash.
@@ -323,7 +323,7 @@ A numbered list in two balanced columns under a 2px green rule. Each note is a `
 - **Do** close every footing and final total with a 3px double rule (subtotals take a single faded-ink rule above), and frame sheets, tabs and panels with a 1.5px printed-green line.
 - **Do** mark the picked office, its trial-balance row and the hovered month with the 8% green wash.
 - **Do** derive extra fills from printed green mixed into the sheet or paper before reaching for any new hue.
-- **Do** pair every red-pencil circle with a pen letter that resolves to a written auditor's note.
+- **Do** pair every red-pencil circle with a pen letter that resolves to a row in the exceptions schedule.
 - **Do** draw any check, arrow or status mark as inline SVG in the ink colours.
 
 ### Don't:

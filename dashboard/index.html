@@ -126,15 +126,22 @@ table{width:100%;border-collapse:collapse}
 .tb tr.on td{background:var(--wash)}
 .tb tr.on th{background:color-mix(in srgb,var(--green) 8%,var(--sheet))}
 
-/* auditor's notes */
-.notes{list-style:none;margin:0;padding:0;border-top:2px solid var(--green)}
-.notes li{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule);align-items:baseline}
-.notes .lt{font:400 32px/0.7 var(--pen);color:var(--red);text-align:center}
-.notes p{margin:0;font-size:15.5px;max-width:78ch}
-.notes p b{font-weight:700}
-.notes .src{display:block;font:500 12px var(--mono);color:var(--ink-3);margin-top:3px}
-.notes .go{border:0;background:none;padding:4px 0;font:600 14px var(--font);color:var(--green);cursor:pointer;white-space:nowrap;text-decoration:underline;text-decoration-color:var(--rule-2);text-underline-offset:3px}
-.notes li.none{display:block;color:var(--ink-2)}
+/* auditor's exceptions schedule */
+.exc{font-size:15px}
+.exc th,.exc td{padding:10px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule);vertical-align:baseline}
+.exc thead th{font:700 11.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--green);border-bottom:2px solid var(--green);padding-top:12px;vertical-align:bottom}
+.exc .n,.exc .off,.exc .ln{text-align:left}
+.exc td.n{font:600 15px var(--mono);color:var(--red);width:44px}
+.exc .off{white-space:normal}
+.exc .off button{border:0;background:none;padding:0;font:600 15px var(--font);color:var(--ink);cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px}
+.exc .off button:hover{text-decoration-color:var(--green)}
+.exc .off small,.exc .ln small,.exc .eff small{display:block;font:500 11.5px var(--mono);color:var(--ink-3);margin-top:2px;white-space:normal}
+.exc .ln{white-space:normal;color:var(--ink-2)}
+.exc td.v,.exc td.pr,.exc td.eff{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14.5px}
+.exc td.v{color:var(--red);font-weight:600}
+.exc td.eff{font-weight:600}
+.exc small.only-sm{display:none}
+.exc tr.none td{text-align:left;color:var(--ink-2);white-space:normal}
 
 /* panels */
 .two{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start}
@@ -214,8 +221,14 @@ footer{margin-top:40px;padding-top:12px;border-top:3px double var(--green);color
   .tb{min-width:820px}
   .tb th:first-child,.tb td:first-child{width:38%;max-width:9.5rem;white-space:normal}
   .only-sm{display:block}
-  .notes li{grid-template-columns:28px minmax(0,1fr)}
-  .notes .go{grid-column:2;justify-self:start}
+  .exc thead{display:none}
+  .exc tr{display:grid;grid-template-columns:28px minmax(0,1fr) auto;grid-template-areas:'n off eff' 'n ln eff';column-gap:10px;padding:10px 0;border-bottom:1px solid var(--rule)}
+  .exc th,.exc td{border:0;padding:0 4px}
+  .exc .ln small:not(.only-sm){display:none}
+  .exc td.n{grid-area:n;width:auto;padding-left:10px}.exc td.off{grid-area:off}.exc td.ln{grid-area:ln;padding-top:4px}.exc td.eff{grid-area:eff;align-self:center;padding-right:10px}
+  .exc td.v,.exc td.pr{display:none}
+  .exc tr.none{display:block;padding:12px 10px}
+  .exc small.only-sm{display:block;color:var(--ink-2);font-size:12.5px}
   .adj li{grid-template-columns:52px 76px minmax(0,1fr);gap:8px}
   .rec .hide-sm{display:none}
   .rec span.only-sm{font-size:12px;color:var(--ink-3)}
@@ -246,7 +259,7 @@ footer{margin-top:40px;padding-top:12px;border-top:3px double var(--green);color
     <div class="tabs" role="tablist" aria-label="Region" id="tabs"></div>
     <div class="sheet" id="ledSheet" role="tabpanel"><table class="led" id="led"></table></div>
     <p class="note only-sm">On a phone the ledger shows one column: the tab or office you picked. Small figures are the change against the prior period.</p>
-    <p class="note">Ratios are worked from the period’s summed totals, not averages of monthly ratios. Write-offs are deductions, shown in parentheses. Red marks losses and the auditor’s exceptions; a letter beside a figure points to the notes below the trial balance.</p>
+    <p class="note">Ratios are worked from the period’s summed totals, not averages of monthly ratios. Write-offs are deductions, shown in parentheses. Red marks losses and the auditor’s exceptions; a letter beside a figure points to the exceptions schedule below the trial balance.</p>
   </section>
 
   <section class="sec" aria-labelledby="tH">
@@ -255,8 +268,8 @@ footer{margin-top:40px;padding-top:12px;border-top:3px double var(--green);color
   </section>
 
   <section class="sec" aria-labelledby="aH">
-    <div class="sec-h"><h2 id="aH">Auditor’s notes</h2><p id="aSub"></p></div>
-    <ol class="notes" id="notes"></ol>
+    <div class="sec-h"><h2 id="aH">Auditor’s exceptions</h2><p id="aSub"></p></div>
+    <div class="sheet"><table class="exc" id="notes"></table></div>
   </section>
 
   <section class="sec two">
@@ -378,20 +391,15 @@ function renderTabs(){
 
 /* ---------- exceptions: each office against others of the same type ---------- */
 const CHECKS=[
-  {k:'rate', bad:(v,p)=>v<p-0.025,
-   say:(l,v,p,a)=>`<b>${l.name}</b> collected <b>${pct(v)}</b> of net production, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((p-v)*a.net_production)}</b> not collected.`,
+  {k:'rate', line:'Collection rate', fmt:v=>pct(v), eff:'not collected', bad:(v,p)=>v<p-0.025,
    src:'Practice system payments against production less write-offs', impact:(v,p,a)=>(p-v)*a.net_production},
-  {k:'wo', bad:(v,p)=>v>p+0.03,
-   say:(l,v,p,a)=>`<b>${l.name}</b> wrote off <b>${pct(v)}</b> of gross production to insurance contracts and discounts, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.gross_production)}</b> more.`,
+  {k:'wo', line:'Write-offs, % of production', fmt:v=>pct(v), eff:'more written off', bad:(v,p)=>v>p+0.03,
    src:'Practice system adjustments', impact:(v,p,a)=>(v-p)*a.gross_production},
-  {k:'payroll_pct', bad:(v,p)=>v>p+0.04,
-   say:(l,v,p,a)=>`<b>${l.name}</b> spent <b>${pct(v)}</b> of production on payroll, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.gross_production)}</b> more.`,
+  {k:'payroll_pct', line:'Payroll, % of production', fmt:v=>pct(v), eff:'more payroll', bad:(v,p)=>v>p+0.04,
    src:'UKG payroll register against production', impact:(v,p,a)=>(v-p)*a.gross_production},
-  {k:'supply_pct', bad:(v,p)=>v>p*1.2,
-   say:(l,v,p,a)=>`<b>${l.name}</b> spent <b>${pct(v)}</b> of production on supplies, against ${pct(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.gross_production)}</b> more.`,
+  {k:'supply_pct', line:'Supplies, % of production', fmt:v=>pct(v), eff:'more supplies', bad:(v,p)=>v>p*1.2,
    src:'Henry Schein orders against production', impact:(v,p,a)=>(v-p)*a.gross_production},
-  {k:'cpnp', bad:(v,p)=>v>p*1.3,
-   say:(l,v,p,a)=>`<b>${l.name}</b> spent <b>${money(v)}</b> of paid search per new patient, against ${money(p)} at other ${TYPE[l.specialty]} offices: about <b>${short((v-p)*a.new_patients)}</b> more.`,
+  {k:'cpnp', line:'Paid search per new patient', fmt:v=>money(v), eff:'more search spend', bad:(v,p)=>v>p*1.3,
    src:'Google Ads spend against first visits', impact:(v,p,a)=>(v-p)*a.new_patients},
 ];
 function exceptions(ms){
@@ -515,14 +523,21 @@ function renderTB(ms,EX){
   $('tSub').textContent=`${n} offices, ${periodName(ms)}. Select a heading to sort within each region, or an office name to open it. Circled figures carry an auditor’s note.`;
 }
 
-/* ---------- auditor's notes ---------- */
+/* ---------- auditor's exceptions ---------- */
 function renderNotes(ms,EX){
   const ids=new Set(scopeIds(st.scope));
   const list=EX.list.filter(e=>ids.has(e.id));
   $('aSub').textContent=`Each office against the median of the other offices of the same type, ${periodName(ms)}. Largest dollar effect first; thresholds in note 6.`;
-  $('notes').innerHTML = list.length ? list.map(e=>`<li><span class="lt"><span class="vh">Note </span>${e.letter}</span><p>${e.c.say(LOC[e.id],e.v,e.p,e.a)}<span class="src">${e.c.src} · ${LOC[e.id].region} · ${PMS[LOC[e.id].pms]}</span></p>${e.id===st.scope?'':`<button class="go" data-id="${e.id}">Open ${LOC[e.id].name}</button>`}</li>`).join('')
-    : `<li class="none">No exceptions for ${scopeName(st.scope)} in this period: ${isOffice(st.scope)?`${LOC[st.scope].name} is inside every threshold`:`every office in ${scopeName(st.scope)} is inside the thresholds`} in note 6.</li>`;
-  $('notes').querySelectorAll('.go').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
+  const head=`<thead><tr><th scope="col" class="n">Note</th><th scope="col" class="off">Office</th><th scope="col" class="ln">Line</th><th scope="col">Figure</th><th scope="col">Peer median</th><th scope="col">Effect</th></tr></thead>`;
+  const body = list.length ? list.map(e=>{ const l=LOC[e.id], c=e.c, peers=`${TYPE[l.specialty]} offices`;
+    return `<tr><td class="n"><span class="vh">Note </span>${e.letter}</td>`+
+      `<th scope="row" class="off">${e.id===st.scope?`<b>${l.name}</b>`:`<button data-id="${e.id}">${l.name}</button>`}<small>${l.region} · ${PMS[l.pms]}</small></th>`+
+      `<td class="ln">${c.line}<small class="only-sm">${c.fmt(e.v)} against ${c.fmt(e.p)} at other ${peers}</small><small>${c.src}</small></td>`+
+      `<td class="v">${c.fmt(e.v)}</td><td class="pr">${c.fmt(e.p)}</td>`+
+      `<td class="eff">${short(e.impact)}<small>${c.eff}</small></td></tr>`; }).join('')
+    : `<tr class="none"><td colspan="6">No exceptions for ${scopeName(st.scope)} in this period: ${isOffice(st.scope)?`${LOC[st.scope].name} is inside every threshold`:`every office in ${scopeName(st.scope)} is inside the thresholds`} in note 6.</td></tr>`;
+  $('notes').innerHTML=head+'<tbody>'+body+'</tbody>';
+  $('notes').querySelectorAll('tbody button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.id)));
   return list;
 }
 
